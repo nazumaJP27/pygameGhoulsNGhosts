@@ -2,6 +2,7 @@
 #### Video Demo (CS50P Final Project): https://youtu.be/1SQpq-fdN_I
 #### Description: An arcade-style game inspired by the classic Super Ghouls 'n Ghosts. It features simple rogue-like elements and character progression, encouraging players to replay and compete for the highest score.
 
+
 ## Overview
 This project is a game created with the Pygame library, inspired by Capcom's Ghosts ‘n Goblins series, particularly based on **Super Ghouls ‘n Ghosts** released in 1991 for the Super Nintendo Entertainment System (SNES). Most assets, such as sprites, art, tiles, and sounds, were obtained from rips and screenshots of the original game found on the internet.
 
