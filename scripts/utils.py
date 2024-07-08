@@ -21,7 +21,6 @@ def load_images_dict(path):
     images = {}
     for img_name in sorted(os.listdir(BASE_IMG_PATH + path)):
         images[str(img_name)] = load_image(path + "/" + img_name)
-        #images.append(load_image(path + "/" + img_name))
     return images
 
 

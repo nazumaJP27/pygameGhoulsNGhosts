@@ -5,15 +5,13 @@ import os
 import sys
 from scripts.entities import PhysicsEntity, Weapon, Player, Spear, Sword, Axe, Arrow, Enemy, Zombie, Maddog, MaddogS, Ghost, Item, WeaponDrop
 from scripts.utils import load_image, load_images, load_images_dict, show_hitbox, Animation
-print
+
 
 def main():
-    opening_game = False
+    opening_game = True
     if opening_game:
-        Game.opening()
-    run_game = False
-    if run_game:
-        Game.run()
+         Game().opening()
+
 
 class Game:
     def __init__(self):
@@ -68,7 +66,7 @@ class Game:
             "enemy_killed": pygame.mixer.Sound("assets/sfx/enemy_killed.wav"),
             "ghost_killed": pygame.mixer.Sound("assets/sfx/ghost_killed.wav"),
             "ghost_swirl": pygame.mixer.Sound("assets/sfx/ghost_swirl.wav"),
-            "item_drop": pygame.mixer.Sound("assets/sfx/item_drop.wav"),
+            "item_drop": pygame.mixer.Sound("assets/sfx/item_drop.wav"), 
             "weapon_drop": pygame.mixer.Sound("assets/sfx/weapon_drop.wav"),
             "game_over": pygame.mixer.Sound("assets/sfx/game_over.wav"),
             "intro": pygame.mixer.Sound("assets/sfx/[INTRO]Haunted Graveyard.wav"),
@@ -191,8 +189,8 @@ class Game:
         self.tenth_score = self.high_scores[9][1]
 
         self.all_time_scores = True
+        self.all_scores = []
         if self.all_time_scores:
-            self.all_scores = []
             with open("all_scores.csv") as file:
                 for line in file:
                     name, score = line.rstrip().split(",")
@@ -255,7 +253,7 @@ class Game:
         }
 
 
-    def write(self, sentence, position, surf=None, font="fontA", center=False, left=False, symbol=False, scale=1.0, compansate=True): #compansate different widths
+    def write(self, sentence, position, surf=None, font="fontA", center=False, left=False, symbol=False, scale=1.0, compensate=True): #compensate different widths
         final_sentence = {}
         char_n = 0
         string = str(sentence)
@@ -312,7 +310,6 @@ class Game:
             for char in string:
                 if char in symbols_dict:
                     char = symbols_dict[char]
-
                 if char == "_":
                     pos[0] += 8
                 if char == " ":
@@ -326,15 +323,15 @@ class Game:
                         char_rect = char_img.get_rect(bottomleft=(pos[0], pos[1] - 2))
                     else:
                         char_rect = char_img.get_rect(bottomleft=(pos[0], pos[1]))
-                    if char == "i" and compansate:
+                    if char == "i" and compensate:
                         pos[0] += 4
-                    elif char == "colon" and compansate:
+                    elif char == "colon" and compensate:
                         pos[0] += 4
-                    elif char == "dot" and compansate:
+                    elif char == "dot" and compensate:
                         pos[0] += 4
-                    elif char == "spacebar" and compansate:
+                    elif char == "spacebar" and compensate:
                         pos[0] += 13
-                    elif char in symbols and compansate:
+                    elif char in symbols and compensate:
                         pos[0] += 10
                     else:
                         if scale > 1.0:
@@ -356,7 +353,7 @@ class Game:
 
     def reset_variables(self):
         self.score = 0
-        self.horde = 5
+        self.horde = 0
         self.enemies_defeated = 0
 
         # Time variables
@@ -414,7 +411,7 @@ class Game:
         speed_level_rect = self.hud["upgrade3"].get_rect(center=(60, 61))
         surf.blit(self.hud["upgrade" + str(self.player.speed_level)], speed_level_rect)
 
-        #score
+        # Score
         score = self.score * 10
         self.write("score", (598, 15), self.display, left=True)
         self.write(score, (598, 30), self.display, font="fontB", left=True)
@@ -462,7 +459,7 @@ class Game:
         if self.item_roll <= 0:
             random_drop = 1
         else:
-            numbers = list(range(-5, 2)) # Create a list of numbers from -5 to 1
+            numbers = list(range(-5, 2)) # 1/7 chance
             random_drop = random.choice(numbers)
         if random_drop > 0:
             self.item_roll = 15
@@ -668,11 +665,9 @@ class Game:
             pygame.draw.rect(self.display, (255, 255, 255), border)
         self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
         pygame.display.update()
-        #pygame.time.delay(1000)  # Wait for 1 second
 
         pygame.time.delay(2000)
 
-        # End the opening
         self.main_menu()
 
 
@@ -689,8 +684,7 @@ class Game:
         game_start_rect = game_start_img.get_rect(center=game_start_pos)
 
         select = 0
-        #adjust_pos = 9
-        selectSpearPosition = [(245, game_start_pos[1]), '''(245 + adjust_pos, controls_pos[1])'''] 
+        selectSpearPosition = [(245, game_start_pos[1]),] 
         select_spear_img = load_image("misc/select spear.png")
         select_spear_rect = select_spear_img.get_rect(center=selectSpearPosition[select])
 
@@ -1164,7 +1158,6 @@ class Game:
             # Background and map images
             self.display.fill((0, 0, 0, 0))
             self.display0.fill((0, 0, 0))
-            #self.display0.blit(mountains_img, (-25, 0))
             self.display0.blit(mountains_img, (130, 50))
             self.display0.blit(mountains_img, (-350, 50))
             self.display0.blit(castle_img, (0, 60))
@@ -1260,7 +1253,6 @@ class Game:
                         self.weapons_n_kills[enemy.hit_weapon] += 1
                         print(f"Score: {self.score}")
                         if self.player.hp < 2 or not self.player.max_level:
-                            print("haha")
                             item = self.item_drop(enemy.pos) # Handle weapons and upgrade drops
                         if item:
                             items.append(item)
@@ -1299,7 +1291,7 @@ class Game:
                 else:
                     final_name = name.strip("_").lstrip().rstrip()
                     if not enter:
-                        name_pos = self.write(name, (327, 130), self.display, center=True, scale=1.0, compansate=False)
+                        name_pos = self.write(name, (327, 130), self.display, center=True, scale=1.0, compensate=False)
                     elif enter:
                         if final_name == "":
                             final_name = self.player_name
@@ -1874,8 +1866,5 @@ class Game:
             self.clock.tick(60)
 
 
-
 if __name__ == "__main__":
-    Game().opening()
-    Game().main_menu()
-    #Game().game_over()
+    main()

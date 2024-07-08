@@ -1,5 +1,5 @@
-move_input,1
-jump_input,1
-crouch_input,1
-shoot_input,2
-swap_weapon_input,2
+move_input,0
+jump_input,0
+crouch_input,0
+shoot_input,1
+swap_weapon_input,0

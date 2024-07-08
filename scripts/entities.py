@@ -2,6 +2,7 @@ import pygame
 import random
 from scripts.utils import load_image, load_images, show_hitbox, Animation
 
+
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size):
         self.game = game
@@ -69,7 +70,6 @@ class PhysicsEntity:
                     if bottom_side.colliderect(collision_entity_rect):
                         self.hit["bottom"] = True
 
-        
         collision_tiles = []
         if tiles:
             for tile in tiles:
@@ -301,7 +301,6 @@ class Player(PhysicsEntity):
         if self.damaged:
             self.hit_animation_dur += 1
             self.set_action("hit")
-            #self.size = frame_size
             if self.hit_animation_dur >= 20:
                 self.hp -= 1
                 self.hit_cooldown = 90
@@ -410,7 +409,6 @@ class Player(PhysicsEntity):
             surf.blit(pygame.transform.flip(self.animation.sprite(), self.flip, False), (self.rect()[0] - 8, self.rect()[1] + 2))
         else:
             surf.blit(pygame.transform.flip(self.animation.sprite(), self.flip, False), (self.rect()[0] + self.renderPos_x, self.rect()[1] + self.renderPos_y))
-            #surf.blit(pygame.transform.flip(self.animation.sprite(), self.flip, False), (self.rect()[0] - 4, self.rect()[1] - 5))
 
 
 class Enemy(PhysicsEntity):
@@ -515,6 +513,7 @@ class Enemy(PhysicsEntity):
         else:
             surf.blit(pygame.transform.flip(self.animation.sprite(), self.flip, False), (self.rect()[0] + self.renderPos_x, self.rect()[1] + self.renderPos_y))
 
+
 class Zombie(Enemy):
     def __init__(self, game, pos, player_pos):
         self.player_pos = player_pos
@@ -562,7 +561,6 @@ class Zombie(Enemy):
                 self.size = frame_size
             else:
                 self.size = self.size
-
 
 
 class Maddog(Enemy):
@@ -961,7 +959,6 @@ class Spear(Weapon):
             else:
                 self.pos[0] -= 10
             self.pos[1] -= 10
-        
 
 
 class Sword(Weapon):
@@ -1018,6 +1015,7 @@ class Axe(Weapon):
     def gravity(self, x=0.1):
         self.velocity[1] += x
         return True
+
 
 class Arrow(Weapon):
     def __init__(self, game, pos, flip, player_power):
