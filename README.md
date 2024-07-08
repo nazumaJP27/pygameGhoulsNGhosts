@@ -11,6 +11,37 @@ This project is a game created with the Pygame library, inspired by Capcom's Gho
 Throughout the game, players can collect **items** to increase Arthur’s *damage, speed, hit points*, and discover other *weapons* to help overcome the challenge of staying alive. The game also features a **leaderboard** system that stores the top ten highest scores and the names of the players who achieved them.
 
 
+## Installation
+
+To run the Pygame Ghouls 'N Ghosts project, follow these steps:
+
+1. **Clone the repository**:
+    ```sh
+    git clone https://github.com/nazumaJP27/pygameGhoulsNGhosts.git
+    cd pygameGhoulsNGhosts
+    ```
+
+3. **Install the required dependencies**:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+4. **Run the game**:
+    ```sh
+    python game.py
+    ```
+
+### Additional Notes
+
+- Make sure you have Python 3.7 or higher installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
+- If you encounter any issues with missing packages, you can manually install them using pip:
+    ```sh
+    pip install pygame
+    ```
+
+ 🕹 Now, you are ready to enjoy the game! Have fun playing Pygame Ghouls 'N Ghosts! 👻
+
+
 ## Design and Vision
 
 ### Concept
