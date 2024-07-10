@@ -1085,6 +1085,7 @@ class Game:
 
     def run(self):
         pygame.mixer.fadeout(1000) # To stop the game over music
+        
         ### Variables for name prompt
         name_prompt = False
         name_prompt_delay = 90
@@ -1112,7 +1113,7 @@ class Game:
             name += "_"
         char_in_name = 0
         ### Variables for name prompt
-        
+
         intro_length = round(self.sfx["intro"].get_length() * 60)
         intro = self.sfx["intro"].play()
         music = None
@@ -1178,7 +1179,6 @@ class Game:
                 pygame.Rect(334, 145, 23, 10), #collum above platform
                 pygame.Rect(469, 227, 23, 10), #right platform
                 pygame.Rect(561, 190, 10, 10), #skull spitter
-
                 #pygame.Rect(0, 300, 600, 10), #bottom floor
                 #pygame.Rect(200, 80, 200, 10), #upgrade platform
                 ]
