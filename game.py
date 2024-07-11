@@ -574,11 +574,11 @@ class Game:
 
 
     def opening(self):
-        this_is_CS50 = load_image("opening/This is CS50.png")
-        this_is_CS50_size = list(this_is_CS50.get_size())
+        nazumaLogo = load_image("opening/nazuma-nobg.png")
+        nazumaLogo_size = list(nazumaLogo.get_size())
         size_adjust = 2.4
-        this_is_CS50 = pygame.transform.scale(this_is_CS50, (this_is_CS50_size[0] / size_adjust, this_is_CS50_size[1] / size_adjust))  # Adjust size if needed
-        logo_rect = this_is_CS50.get_rect(center=(300, 150))
+        nazumaLogo = pygame.transform.scale(nazumaLogo, (nazumaLogo_size[0] / size_adjust, nazumaLogo_size[1] / size_adjust))  # Adjust size if needed
+        logo_rect = nazumaLogo.get_rect(center=(300, 150))
 
         # Initial black screen
         self.display.fill((0, 0, 0))
@@ -647,11 +647,11 @@ class Game:
 
         # Start the sequence
         self.sfx["capcom"].play()
-        fade_in_and_out(this_is_CS50, logo_rect)
+        fade_in_and_out(nazumaLogo, logo_rect)
 
         # Final black screen
         self.display.fill((0, 0, 0))
-        self.write("this is cs50.", (325, 180), self.display, center=True, scale=2.0)
+        self.write("the first of nazuma", (325, 180), self.display, center=True, scale=2.0)
         
 
         display_borders = [
