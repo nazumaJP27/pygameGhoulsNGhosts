@@ -651,18 +651,19 @@ class Game:
 
         # Final black screen
         self.display.fill((0, 0, 0))
-        self.write("the first of nazuma", (325, 180), self.display, center=True, scale=2.0)
-        
+        self.write("by j. paulo seibt", (303, 180), self.display, center=True, scale=1.0)
 
         display_borders = [
                     pygame.Rect(0, 1, 1, 318),  # left_border
                     pygame.Rect(599, 1, 1, 318),  # right_border
                     pygame.Rect(1, 0, 598, 1),  # top_border
                     pygame.Rect(1, 319, 598, 1),  # bottom_border
-                    #pygame.Rect(299, 1, 1, 318), #center
+                    pygame.Rect(299, 1, 1, 318), #center
                 ]
-        for border in display_borders:
-            pygame.draw.rect(self.display, (255, 255, 255), border)
+        if self.draw_borders:
+            for border in display_borders:
+                pygame.draw.rect(self.display, (255, 255, 255), border)
+
         self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
         pygame.display.update()
 
@@ -675,22 +676,17 @@ class Game:
         logo_img = load_image("misc/logo-snake.png")
         logo_rect = logo_img.get_rect(center=(300, 100))
 
-        '''controls_img = load_image("misc/controls.png")
-        controls_pos = (300, 225)
-        controls_rect = controls_img.get_rect(center=controls_pos)'''
-
         game_start_img = load_image("misc/game start.png")
         game_start_pos = (300, 200)
         game_start_rect = game_start_img.get_rect(center=game_start_pos)
 
         select = 0
-        selectSpearPosition = [(245, game_start_pos[1]),] 
+        selectSpearPosition = [(0, 0)] 
         select_spear_img = load_image("misc/select spear.png")
         select_spear_rect = select_spear_img.get_rect(center=selectSpearPosition[select])
 
         images = {
             "logo": [logo_img, logo_rect],
-            #"controls": [controls_img, controls_rect],
             "game_start": [game_start_img, game_start_rect],
             "select_spear": [select_spear_img, select_spear_rect]
         }
@@ -706,22 +702,14 @@ class Game:
             select_help = self.write("[/$", (28, 305), self.display, font="fontB", center=True)
             self.write("select", (select_help[0] + 26, select_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
-            credits = self.write("final project for cs50 python", (300, 270), self.display, font="fontA", center=True)
-            credits1 = self.write("by j. paulo seibt", (300, 285), self.display, font="fontA", center=True)
-            credits1 = self.write("june, 2024", (300, 300), self.display, font="fontA", center=True)
+            github = self.write("github:", (233, 290), self.display, font="fontC", scale=1.0)
+            self.write("nazumajp27", (github[3], github[1]), self.display, font="fontC", scale=1.0)
 
-            '''test_build = self.write("test build:", (10, 10), self.display, font="fontB", scale=0.9)
-            self.write("tobias", (test_build[3], 10), self.display, font="fontD", scale=0.9)'''
-
-            test_build0 = self.write("edx:", (10, 10), self.display, font="fontC", scale=1.0)
-            self.write("seibt_jp27", (test_build0[3], 10), self.display, font="fontA", scale=1.0)
-            test_build1 = self.write("git:", (13, 25), self.display, font="fontC", scale=1.0)
-            self.write("nazumajp27", (test_build1[3], 25), self.display, font="fontA", scale=1.0)
 
             selectSpearPosition = [
                 (game_start_pos[0] - 63, game_start_pos[1] - 4),
                 (controls_options_pos[2] - 23, controls_options_pos[1] - 8),
-                                   ]
+                                ]
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -767,6 +755,7 @@ class Game:
                 pygame.Rect(599, 1, 1, 318), #right_border
                 pygame.Rect(1, 0, 598, 1), #top_border
                 pygame.Rect(1, 319, 598, 1), #bottom_border
+                pygame.Rect(299, 1, 1, 318), #center
             ]
             if self.draw_borders:
                 for border in display_borders:
@@ -1053,7 +1042,7 @@ class Game:
                 pygame.Rect(599, 1, 1, 318), #right_border
                 pygame.Rect(1, 0, 598, 1), #top_border
                 pygame.Rect(1, 319, 598, 1), #bottom_border
-                #pygame.Rect(299, 1, 1, 318), #center
+                pygame.Rect(299, 1, 1, 318), #center
             ]
             if self.draw_borders:
                 for border in display_borders:
@@ -1594,6 +1583,7 @@ class Game:
                 pygame.Rect(599, 1, 1, 318), #right_border
                 pygame.Rect(1, 0, 598, 1), #top_border
                 pygame.Rect(1, 319, 598, 1), #bottom_border
+                pygame.Rect(299, 1, 1, 318), #center
             ]
             if self.draw_borders:
                 for border in display_borders:
@@ -1611,10 +1601,6 @@ class Game:
         game_over_img = load_image("game_over/5.png")
         game_over_rect = game_over_img.get_rect(center=(300, 115))
 
-        '''controls_img = load_image("misc/controls.png")
-        controls_pos = (300, 285)
-        controls_rect = controls_img.get_rect(center=controls_pos)'''
-
         game_start_img = load_image("misc/game start.png")
         game_start_pos = (300, 260)
         game_start_rect = game_start_img.get_rect(center=game_start_pos)
@@ -1627,7 +1613,6 @@ class Game:
 
         images = {
             "game_over": [game_over_img, game_over_rect],
-            #"controls": [controls_img, controls_rect],
             "game_start": [game_start_img, game_start_rect],
             "select_spear": [select_spear_img, select_spear_rect]
         }
@@ -1840,6 +1825,7 @@ class Game:
                 pygame.Rect(599, 1, 1, 318), #right_border
                 pygame.Rect(1, 0, 598, 1), #top_border
                 pygame.Rect(1, 319, 598, 1), #bottom_border
+                pygame.Rect(299, 1, 1, 318), #center
             ]
             if self.draw_borders:
                 for border in display_borders:
