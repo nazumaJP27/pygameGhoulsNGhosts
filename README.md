@@ -100,23 +100,23 @@ The initialization sets the foundation for the game, ensuring all necessary asse
 
 ### Opening
 
-The opening attempts to resemble the booting sequence from *Super Ghouls 'n Ghosts* for the *SNES*, swapping Capcom's logo with CS50's. This sequence consists of a fade-in and fade-out effect for the logo, accompanied by the original game's sound effect, followed by a transition to the main menu.
+The `opening` method attempts to resemble the booting sequence from *Super Ghouls 'n Ghosts* for the *SNES*, swapping Capcom's logo with CS50's. This sequence consists of a fade-in and fade-out effect for the logo, accompanied by the original game's sound effect, followed by a transition to the main menu.
 
 
 ### Main Menu 
 
-The main menu provides the player with options to start the game, view control settings, and see credits. It features a visual interface with selectable options and navigation using keyboard inputs.
+The `main_menu` method provides the player with options to start the game, view control settings, and see credits. It features a visual interface with selectable options and navigation using keyboard inputs.
 
 - **Menu Layout:** Images for the logo, **`game start`** button, and **`control options`** are loaded and positioned on the screen. A selection cursor (*small spear*) is displayed next to the currently selected option.
 
-- **Transition to Game or Controls Screen:** A variable called `select` keeps track of where the cursor should be and what section to load. Depending on the selected option, the game transitions to the main gameplay loop (`self.run()`) or the controls screen (`self.controls_screen()`).
+- **Transition to Game Running or Controls Screen:** A variable called `select` keeps track of where the cursor should be and what section to load. Depending on the selected option, the game transitions to the main gameplay loop (`self.run()`) or the controls screen (`self.controls_screen()`).
 
  - **Sound Effects:** Different sound effects play for navigating the menu and for the selected button, providing audio feedback for user actions.
 
 
 ### Controls Screen
 
-The controls screen allows players to view and change key bindings for various actions in the game. The interface is navigated using keyboard inputs, and changes can be saved and applied. Effort was put into making every selected action clear, and the sound effects provided great feedback.
+The `controls_screen` allows players to view and change key bindings for various actions in the game. The interface is navigated using keyboard inputs, and changes can be saved and applied. Effort was put into making every selected action clear, and the sound effects provided great feedback.
 
 - **Controls Layout:** Displays key bindings for actions like moving, jumping, crouching, shooting, and swapping weapons. Players can see the current bindings and navigate through them.
 
@@ -206,7 +206,7 @@ The `game_over` method is responsible for handling the end-game sequence and sho
 
 - Displays the player's name, score, hordes cleared, enemies defeated, power level, speed level, and kills with various weapons.
 
-- Also shows the elapsed time of the game session, measured using the `count_time()` function.
+- It also shows the elapsed time of the game session, measured using the `count_time()` function.
 
 #### 5. Leaderboard Display:
 
