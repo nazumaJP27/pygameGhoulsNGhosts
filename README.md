@@ -90,7 +90,7 @@ The initialization phase sets up the game environment, loads necessary assets, a
 
 - **Library Imports:** The necessary libraries and custom classes are imported at the beginning. This includes **`pygame`**, **`random`**, **`os`** and **`sys`**. Custom classes such as **`Animation`**, **`Player`**, and various game entities are also imported.
 
-- **Asset Loading Functions:** Functions to load images and animations from the asset directory are defined. **`load_image`** loads a single image, applies a color key for transparency, and scales it. **`load_images`** load multiple images, returning them as a list (primarily used for the animations). **`load_images_dict`** load multiple images, returning them as a dictionary (used for the font images).
+- **Asset Loading Functions:** Functions to load images and animations from the asset directory are imported from the `utils` file. **`load_image`** loads a single image, applies a color key for transparency, and scales it. **`load_images`** load multiple images, returning them as a list (primarily used for the animations). **`load_images_dict`** load multiple images, returning them as a dictionary (used for the font images).
 
 - **Game Class Initialization:** The **`Game`** class initializes the game environment. This includes creating the game window, setting up the display, loading fonts (used for the `write` function), sound effects, animations, and other game assets. Variables to track the player's state, score, and controls are also initialized here.
 
@@ -177,6 +177,7 @@ self.seconds
 self.player.power_level
 self.weapons_n_kills (dict)
 ```
+
 
 ### Game Over
 
@@ -366,7 +367,7 @@ Throughout the game loop, several custom functions are called at specific points
 
 
 ## Classes
-Description of the classes imported from the `classes.py` file.
+Description of the classes imported from the `entities.py` file.
 
 
 ### `Animation`
