@@ -48,7 +48,7 @@ class Game:
 
         self.sfx = {
             "capcom": pygame.mixer.Sound("assets/sfx/capcom.wav"),
-            "this_is_CS50": pygame.mixer.Sound("assets/sfx/this_is_CS50.wav"),
+            "by": pygame.mixer.Sound("assets/sfx/this_is_CS50.wav"),
             "select": pygame.mixer.Sound("assets/sfx/select.wav"),
             "change_selected": pygame.mixer.Sound("assets/sfx/change_selected.wav"),
             "controls": pygame.mixer.Sound("assets/sfx/controls.wav"),
@@ -622,8 +622,7 @@ class Game:
                     alpha -= 5  # Adjust the speed of fade out
                     if alpha <= 0:
                         alpha = 0
-                        self.sfx["this_is_CS50"].play()
-                        #pygame.time.delay(1500)
+                        self.sfx["by"].play()
                         break
 
                 # Apply alpha to the logo
@@ -1101,7 +1100,7 @@ class Game:
         for _ in range(n_name_char): #create a string with n chars
             name += "_"
         char_in_name = 0
-        ### Variables for name prompt
+        ### Variables for name prompt ^
 
         intro_length = round(self.sfx["intro"].get_length() * 60)
         intro = self.sfx["intro"].play()
@@ -1109,7 +1108,6 @@ class Game:
         music_loop = False
 
         self.reset_variables()
-        game_over_timer = 120
 
         enemies = []
         items = []
@@ -1200,10 +1198,7 @@ class Game:
                     music.stop()
                     music = False
                 self.player.update((0, 0), tiles=boundaries)
-                #game_over_timer -= 1
                 name_prompt = True
-                if game_over_timer < 0:
-                    self.game_over()
             elif self.player.damaged == True:
                 self.player.update((0, 0), tiles=platforms, boundaries=boundaries)
             elif self.player.damaged == False and self.player.hit_cooldown != False:
@@ -1526,12 +1521,15 @@ class Game:
                                 n_name_char += 1
                     if event.key == pygame.K_RETURN:
                         if input_your_name:
-                            self.sfx["select"].play()
-                            if final_name == "":
-                                final_name = self.player_name
-                            self.player_name = final_name
-                            pygame.time.delay(500)
-                            self.game_over()
+                            if not enter:
+                                selected_char = len(chars) - 1 # Should == "$"
+                            else:
+                                self.sfx["select"].play()
+                                if final_name == "":
+                                    final_name = self.player_name
+                                self.player_name = final_name
+                                pygame.time.delay(500)
+                                self.game_over()
                 if event.type == pygame.KEYUP:
                     if event.key == self.inputs["move_left"][self.input_move]:
                         if input_your_name:
