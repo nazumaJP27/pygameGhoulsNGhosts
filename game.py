@@ -1,5 +1,6 @@
 import pygame
 import random
+import string
 import time
 import os
 import sys
@@ -1074,7 +1075,7 @@ class Game:
     def run(self):
         pygame.mixer.fadeout(1000) # To stop the game over music
         
-        ### Variables for name prompt
+        ### Variables for name prompt:
         name_prompt = False
         name_prompt_delay = 90
         input_your_name = False
@@ -1087,10 +1088,13 @@ class Game:
         images = {
             "select_spear": [select_spear_img, select_spear_rect]
         }
+
+        keyboard_type = False
+
         chars = "abcdefghijklmnopqrstuvwxyz[$"
         selected_char = 0
-        scrow = [False, False]
-        scrow_timer = 10
+        scroll = [False, False]
+        scroll_timer = 10
 
         name = ""
         name_input_Xpos = 0
@@ -1100,7 +1104,7 @@ class Game:
         for _ in range(n_name_char): #create a string with n chars
             name += "_"
         char_in_name = 0
-        ### Variables for name prompt ^
+        ### Variables for name prompt^
 
         intro_length = round(self.sfx["intro"].get_length() * 60)
         intro = self.sfx["intro"].play()
@@ -1301,24 +1305,24 @@ class Game:
                     confirm_help = self.write(":", (enter_key[3] + 5, enter_key[1]), self.display, font="fontB", scale=0.9)
                     self.write("confirm", (confirm_help[3] + 5, confirm_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
-                    if scrow[0]:
-                        scrow_timer -= 1
-                        if scrow_timer <= 0:
+                    if scroll[0]:
+                        scroll_timer -= 1
+                        if scroll_timer <= 0:
                             self.sfx["change_selected"].play()
                             if selected_char == 0:
                                 selected_char = len(chars) - 1
                             else:
                                 selected_char -= 1
-                            scrow_timer = 7
-                    if scrow[1]:
-                        scrow_timer -= 1
-                        if scrow_timer <= 0:
+                            scroll_timer = 7
+                    if scroll[1]:
+                        scroll_timer -= 1
+                        if scroll_timer <= 0:
                             self.sfx["change_selected"].play()
                             if selected_char == len(chars) - 1:
                                 selected_char = 0
                             else:
                                 selected_char += 1
-                            scrow_timer = 7
+                            scroll_timer = 7
 
                     if n_name_char > 0:
                         scale = 1.0
@@ -1349,54 +1353,54 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == self.inputs["move_left"][self.input_move]: 
-                        if input_your_name:
+                        if input_your_name and not keyboard_type:
                             self.sfx["change_selected"].play()
                             if selected_char == 0:
                                 selected_char = len(chars) - 1
                             else:
                                 selected_char -= 1
-                            scrow_timer = 20
-                            scrow[0] = True
+                            scroll_timer = 20
+                            scroll[0] = True
                         else:
                             self.movement[0] = True
                     if event.key == self.inputs["move_right"][self.input_move]:
-                        if input_your_name:
+                        if input_your_name and not keyboard_type:
                             self.sfx["change_selected"].play()
                             if selected_char == len(chars) - 1:
                                 selected_char = 0
                             else:
                                 selected_char += 1
-                            scrow_timer = 20
-                            scrow[1] = True
+                            scroll_timer = 20
+                            scroll[1] = True
                         else:
                             self.movement[1] = True
                     if event.key == self.inputs["jump"][self.input_jump]:
-                        if input_your_name:
+                        if input_your_name and not keyboard_type:
                             self.sfx["change_selected"].play()
                             if selected_char == 0:
                                 selected_char = len(chars) - 1
                             else:
                                 selected_char -= 1
-                            scrow_timer = 20
-                            scrow[0] = True
+                            scroll_timer = 20
+                            scroll[0] = True
                         else:
                             if self.player.jump():
                                 self.sfx["jump"].play()
                     if event.key == self.inputs["crouch"][self.input_crouch]:
-                        if input_your_name:
+                        if input_your_name and not keyboard_type:
                             self.sfx["change_selected"].play()
                             if selected_char == len(chars) - 1:
                                 selected_char = 0
                             else:
                                 selected_char += 1
-                            scrow_timer = 20
-                            scrow[1] = True
+                            scroll_timer = 20
+                            scroll[1] = True
                         else:
                             if not self.player.dead:
                                 self.player.crouch = True
                     if self.input_shoot < 4: #If is not mouse
                         if event.key == self.inputs["shoot"][self.input_shoot]:
-                            if input_your_name:
+                            if input_your_name and not keyboard_type and self.input_shoot > 0: # If the spacebar are not been used to shoot
                                 if n_name_char == 0 or enter == True:
                                     self.sfx["select"].play()
                                     self.player_name = final_name
@@ -1429,7 +1433,7 @@ class Game:
                     if self.input_swap_weapon < 3: #If is not mouse
                         if event.key == self.inputs["swap_weapon"][self.input_swap_weapon]:
                             self.player.weapon_swap()
-                    if event.key == pygame.K_h:
+                    if event.key == pygame.K_LALT:
                         if not show_hitbox_v:
                             show_hitbox_v = True
                         else:
@@ -1437,76 +1441,74 @@ class Game:
                     if event.key == pygame.K_F1:
                         self.opening()
                     ### ONLY FOR NAME PROMPT:
-                    if event.key == pygame.K_LEFT:
-                        if self.input_move > 0:
-                            if input_your_name: # If the arrows are not been used to move
-                                self.sfx["change_selected"].play()
-                                if selected_char == 0:
-                                    selected_char = len(chars) - 1
-                                else:
-                                    selected_char -= 1
-                                scrow_timer = 20
-                                scrow[0] = True
-                    if event.key == pygame.K_RIGHT:
-                        if self.input_move > 0: # If the arrows are not been used to move
-                            if input_your_name:
-                                self.sfx["change_selected"].play()
-                                if selected_char == len(chars) - 1:
-                                    selected_char = 0
-                                else:
-                                    selected_char += 1
-                                scrow_timer = 20
-                                scrow[1] = True
-                    if event.key == pygame.K_UP:
-                        if self.input_jump > 0: # If the up arrow are not been used to jump
-                            if input_your_name:
-                                self.sfx["change_selected"].play()
-                                if selected_char == 0:
-                                    selected_char = len(chars) - 1
-                                else:
-                                    selected_char -= 1
-                                scrow_timer = 20
-                                scrow[0] = True
-                    if event.key == pygame.K_DOWN:
-                        if self.input_crouch > 0: # If the down arrow are not been used to crouch
-                            if input_your_name:
-                                self.sfx["change_selected"].play()
-                                if selected_char == len(chars) - 1:
-                                    selected_char = 0
-                                else:
-                                    selected_char += 1
-                                scrow_timer = 20
-                                scrow[1] = True
-                    if event.key == pygame.K_SPACE:
-                        if self.input_shoot > 0: # If the spacebar are not been used to shoot
-                            if input_your_name:
-                                if n_name_char == 0 or enter == True:
-                                    self.sfx["select"].play()
-                                    self.player_name = final_name
-                                    pygame.time.delay(500)
-                                    self.game_over()
-                                else:
-                                    self.sfx["pick_up"].play()
-                                    new_name = ""
-                                    i = 0
-                                    for char in name:
-                                        if i == char_in_name:
-                                            if chars[selected_char] == "[":
-                                                new_name += " "
-                                            else:
-                                                new_name += chars[selected_char]
+                    if input_your_name:
+                        if not keyboard_type:
+                            if event.key == pygame.K_LEFT:
+                                if self.input_move > 0: # If the arrows are not been used to move
+                                    self.sfx["change_selected"].play()
+                                    if selected_char == 0:
+                                        selected_char = len(chars) - 1
+                                    else:
+                                        selected_char -= 1
+                                    scroll_timer = 20
+                                    scroll[0] = True
+                            if event.key == pygame.K_RIGHT:
+                                if self.input_move > 0: # If the arrows are not been used to move
+                                    self.sfx["change_selected"].play()
+                                    if selected_char == len(chars) - 1:
+                                        selected_char = 0
+                                    else:
+                                        selected_char += 1
+                                    scroll_timer = 20
+                                    scroll[1] = True
+                            if event.key == pygame.K_UP:
+                                if self.input_jump > 0: # If the up arrow are not been used to jump
+                                    self.sfx["change_selected"].play()
+                                    if selected_char == 0:
+                                        selected_char = len(chars) - 1
+                                    else:
+                                        selected_char -= 1
+                                    scroll_timer = 20
+                                    scroll[0] = True
+                            if event.key == pygame.K_DOWN:
+                                if self.input_crouch > 0: # If the down arrow are not been used to crouch
+                                    self.sfx["change_selected"].play()
+                                    if selected_char == len(chars) - 1:
+                                        selected_char = 0
+                                    else:
+                                        selected_char += 1
+                                    scroll_timer = 20
+                                    scroll[1] = True
+                        if event.key == pygame.K_SPACE:
+                            if n_name_char == 0 or enter == True and not keyboard_type:
+                                self.sfx["select"].play()
+                                self.player_name = final_name
+                                pygame.time.delay(500)
+                                self.game_over()
+                            else:
+                                self.sfx["pick_up"].play()
+                                new_name = ""
+                                i = 0
+                                for char in name:
+                                    if i == char_in_name:
+                                        if chars[selected_char] == "[" or keyboard_type:
+                                            new_name += " "
                                         else:
-                                            new_name += char
-                                        i += 1
-                                    name = new_name
-                                    char_in_name += 1
-                                    name_input_Xpos += 8
-                                    n_name_char -= 1
-                    if event.key == pygame.K_BACKSPACE: #ERASER
-                        if input_your_name:
+                                            new_name += chars[selected_char]
+                                    else:
+                                        new_name += char
+                                    i += 1
+                                name = new_name
+                                char_in_name += 1
+                                name_input_Xpos += 8
+                                n_name_char -= 1
+                        if event.key == pygame.K_BACKSPACE: #ERASER
                             if n_name_char == 13:
                                 pass
                             else:
+                                if enter:
+                                    enter = False
+                                    selected_char = 0
                                 char_in_name -= 1
                                 new_name = ""
                                 i = 0
@@ -1519,8 +1521,7 @@ class Game:
                                 name = new_name
                                 name_input_Xpos -= 8
                                 n_name_char += 1
-                    if event.key == pygame.K_RETURN:
-                        if input_your_name:
+                        if event.key == pygame.K_RETURN:
                             if not enter:
                                 selected_char = len(chars) - 1 # Should == "$"
                             else:
@@ -1530,38 +1531,60 @@ class Game:
                                 self.player_name = final_name
                                 pygame.time.delay(500)
                                 self.game_over()
+                        if event.key == pygame.K_INSERT:
+                            if not keyboard_type:
+                                keyboard_type = True
+                            else:
+                                keyboard_type = False
+                        if keyboard_type and n_name_char > 0 and not enter: # Keyboard support
+                            letter = event.unicode
+                            letter = letter.lower()
+                            if letter in string.ascii_letters:
+                                self.sfx["pick_up"].play()
+                                new_name = ""
+                                i = 0
+                                for char in name:
+                                    if i == char_in_name:
+                                        new_name += letter
+                                    else:
+                                        new_name += char
+                                    i += 1
+                                name = new_name
+                                char_in_name += 1
+                                name_input_Xpos += 8
+                                n_name_char -= 1
                 if event.type == pygame.KEYUP:
                     if event.key == self.inputs["move_left"][self.input_move]:
                         if input_your_name:
-                            scrow[0] = False
+                            scroll[0] = False
                         else:
                             self.movement[0] = False
                     if event.key == self.inputs["move_right"][self.input_move]:
                         if input_your_name:
-                            scrow[1] = False
+                            scroll[1] = False
                         else:
                             self.movement[1] = False
                     if event.key == self.inputs["jump"][self.input_jump]:
                         if input_your_name:
-                            scrow[0] = False
+                            scroll[0] = False
                     if event.key == self.inputs["crouch"][self.input_crouch]:
                         if input_your_name:
-                            scrow[1] = False
+                            scroll[1] = False
                         else:
                             self.player.crouch = False
                     if event.key == pygame.K_LEFT:
                         if input_your_name:
-                            scrow[0] = False
+                            scroll[0] = False
                     if event.key == pygame.K_RIGHT:
                         if input_your_name:
-                            scrow[1] = False
+                            scroll[1] = False
                     if event.key == pygame.K_UP:
                         if input_your_name:
-                            scrow[0] = False
+                            scroll[0] = False
                     if event.key == pygame.K_DOWN:
                         if input_your_name:
-                            scrow[1] = False
-                if self.input_shoot == 4 or self.input_swap_weapon == 3:
+                            scroll[1] = False
+                if self.input_shoot == 4 or self.input_swap_weapon == 3: # If one of the mouse bindings was choosed by the player
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if event.button == pygame.BUTTON_LEFT and self.input_shoot == 4:
                             if not self.player.throw and not self.player.dead:
