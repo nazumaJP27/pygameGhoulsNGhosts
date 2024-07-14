@@ -702,9 +702,8 @@ class Game:
             select_help = self.write("[/$", (28, 305), self.display, font="fontB", center=True)
             self.write("select", (select_help[0] + 26, select_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
-            github = self.write("github:", (233, 290), self.display, font="fontC", scale=1.0)
+            github = self.write("github:", (233, 287), self.display, font="fontC", scale=1.0)
             self.write("nazumajp27", (github[3], github[1]), self.display, font="fontC", scale=1.0)
-
 
             selectSpearPosition = [
                 (game_start_pos[0] - 63, game_start_pos[1] - 4),
@@ -1290,20 +1289,35 @@ class Game:
                     player_name = self.write("player:", (name_pos[2], name_pos[1]), self.display, left=True)
 
                     ###HELP###
-                    #Arrows
-                    change_help = self.write("</>/^/~:", (help_input_your_name[0] - 280, 20), self.display, font="fontB", scale=0.9)
-                    self.write("change", (change_help[3] + 5, change_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
-                    #Spacebar
-                    spacebar = self.write("[", (change_help[0] + 49, change_help[1] + 15), self.display, font="fontB", scale=1.0)
-                    select_help = self.write(":", (spacebar[3] + 2, spacebar[1]), self.display, font="fontB", scale=0.9)
-                    self.write("select", (select_help[3] + 5, select_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
-                    #Backspace
-                    erase_help = self.write("backspace:", (change_help[0] - 8, select_help[1] + 15), self.display, font="fontB", scale=0.9)
-                    self.write("erase", (erase_help[3] + 5, erase_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
-                    #Enter
-                    enter_key = self.write("$", (change_help[0] + 51, erase_help[1] + 15), self.display, font="fontB", scale=0.9)
-                    confirm_help = self.write(":", (enter_key[3] + 5, enter_key[1]), self.display, font="fontB", scale=0.9)
-                    self.write("confirm", (confirm_help[3] + 5, confirm_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
+                    if not keyboard_type:
+                        #Arrows
+                        change_help = self.write("</>/^/~:", (help_input_your_name[0] - 280, 20), self.display, font="fontB", scale=0.9)
+                        self.write("change", (change_help[3] + 5, change_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Spacebar
+                        spacebar = self.write("[", (change_help[0] + 49, change_help[1] + 15), self.display, font="fontB", scale=1.0)
+                        select_help = self.write(":", (spacebar[3] + 2, spacebar[1]), self.display, font="fontB", scale=0.9)
+                        self.write("select", (select_help[3] + 5, select_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Backspace
+                        erase_help = self.write("backspace:", (change_help[0] - 8, select_help[1] + 15), self.display, font="fontB", scale=0.9)
+                        self.write("erase", (erase_help[3] + 5, erase_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Enter
+                        enter_key = self.write("$", (change_help[0] + 51, erase_help[1] + 15), self.display, font="fontB", scale=0.9)
+                        confirm_help = self.write(":", (enter_key[3] + 5, enter_key[1]), self.display, font="fontB", scale=0.9)
+                        self.write("confirm", (confirm_help[3] + 5, confirm_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Insert
+                        insert_key = self.write("insert:", (change_help[0] + 20, enter_key[1] + 15), self.display, font="fontB", scale=0.9)
+                        self.write("keyboard type", (insert_key[3] + 5, insert_key[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                    else:
+                        #Backspace
+                        erase_help = self.write("backspace:", (change_help[0] - 8, 20), self.display, font="fontB", scale=0.9)
+                        self.write("erase", (erase_help[3] + 5, erase_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Enter
+                        enter_key = self.write("$", (change_help[0] + 51, erase_help[1] + 15), self.display, font="fontB", scale=0.9)
+                        confirm_help = self.write(":", (enter_key[3] + 5, enter_key[1]), self.display, font="fontB", scale=0.9)
+                        self.write("confirm", (confirm_help[3] + 5, confirm_help[1] - 1), self.display, font="fontA", center=False, scale=0.9)
+                        #Insert
+                        insert_key = self.write("insert:", (change_help[0] + 20, enter_key[1] + 15), self.display, font="fontB", scale=0.9)
+                        self.write("default input", (insert_key[3] + 5, insert_key[1] - 1), self.display, font="fontA", center=False, scale=0.9)
 
                     if scroll[0]:
                         scroll_timer -= 1
@@ -1503,12 +1517,12 @@ class Game:
                                 name_input_Xpos += 8
                                 n_name_char -= 1
                         if event.key == pygame.K_BACKSPACE: #ERASER
-                            if n_name_char == 13:
-                                pass
-                            else:
-                                if enter:
-                                    enter = False
-                                    selected_char = 0
+                            if enter:
+                                enter = False
+
+                            selected_char = len(chars) - 2 if keyboard_type else 0
+
+                            if n_name_char != 13:
                                 char_in_name -= 1
                                 new_name = ""
                                 i = 0
@@ -1534,25 +1548,30 @@ class Game:
                         if event.key == pygame.K_INSERT:
                             if not keyboard_type:
                                 keyboard_type = True
+                                selected_char = selected_char = len(chars) - 2 #"["
                             else:
                                 keyboard_type = False
-                        if keyboard_type and n_name_char > 0 and not enter: # Keyboard support
+                                selected_char = 0 #"a"
+                        else:
                             letter = event.unicode
-                            letter = letter.lower()
-                            if letter in string.ascii_letters:
-                                self.sfx["pick_up"].play()
-                                new_name = ""
-                                i = 0
-                                for char in name:
-                                    if i == char_in_name:
-                                        new_name += letter
-                                    else:
-                                        new_name += char
-                                    i += 1
-                                name = new_name
-                                char_in_name += 1
-                                name_input_Xpos += 8
-                                n_name_char -= 1
+                            if keyboard_type and n_name_char > 0 and not enter: # Keyboard support
+                                letter = letter.lower()
+                                if not letter:
+                                    pass
+                                elif letter in chars:
+                                    self.sfx["pick_up"].play()
+                                    new_name = ""
+                                    i = 0
+                                    for char in name:
+                                        if i == char_in_name:
+                                            new_name += letter
+                                        else:
+                                            new_name += char
+                                        i += 1
+                                    name = new_name
+                                    char_in_name += 1
+                                    name_input_Xpos += 8
+                                    n_name_char -= 1
                 if event.type == pygame.KEYUP:
                     if event.key == self.inputs["move_left"][self.input_move]:
                         if input_your_name:
