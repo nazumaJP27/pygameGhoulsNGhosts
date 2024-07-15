@@ -1074,9 +1074,9 @@ class Game:
     def run(self):
         pygame.mixer.fadeout(1000) # To stop the game over music
         
-        ### Variables for name prompt:
+        ### Variables and functions for name prompt:
         name_prompt = False
-        name_prompt_delay = 90
+        input_prompt_delay = 90
         input_your_name = False
 
         select = 0
@@ -1096,13 +1096,54 @@ class Game:
         scroll_timer = 10
 
         name = ""
-        name_input_Xpos = 0
+        char_cursor_Xpos = 0
         enter = False
 
-        n_name_char = 13
-        for _ in range(n_name_char): #create a string with n chars
+        n_name_chars = 13
+        for _ in range(n_name_chars): #create a string with n chars
             name += "_"
         char_in_name = 0
+
+        def confirm_char(name, char_in_name, char_cursor_Xpos, n_name_chars, enter, selected_char, chars=chars):
+            if n_name_chars == 0 or enter == True:
+                self.sfx["select"].play()
+                self.player_name = final_name
+                pygame.time.delay(500)
+                self.game_over()
+            else:
+                self.sfx["pick_up"].play()
+                new_name = ""
+                i = 0
+                for char in name:
+                    if i == char_in_name:
+                        if chars[selected_char] == "[":
+                            new_name += " "
+                        else:
+                            new_name += chars[selected_char]
+                    else:
+                        new_name += char
+                    i += 1
+            name = new_name
+            char_in_name += 1
+            char_cursor_Xpos += 8
+            n_name_chars -= 1
+            return name, char_in_name, char_cursor_Xpos, n_name_chars
+        
+        def add_space_to_name(name, char_in_name, char_cursor_Xpos, n_name_chars):
+            self.sfx["pick_up"].play()
+            new_name = ""
+            i = 0
+            for char in name:
+                if i == char_in_name:
+                    new_name += " "
+                else:
+                    new_name += char
+                i += 1
+            name = new_name
+            char_in_name += 1
+            char_cursor_Xpos += 8
+            n_name_chars -= 1
+            return name, char_in_name, char_cursor_Xpos, n_name_chars
         ### Variables for name prompt^
 
         intro_length = round(self.sfx["intro"].get_length() * 60)
@@ -1272,8 +1313,8 @@ class Game:
             ### NAME PROMPT
             if name_prompt:
                 if not input_your_name:
-                    name_prompt_delay -= 1
-                    if name_prompt_delay < 1:
+                    input_prompt_delay -= 1
+                    if input_prompt_delay < 1:
                         input_your_name = True
                 else:
                     final_name = name.strip("_").lstrip().rstrip()
@@ -1338,23 +1379,22 @@ class Game:
                                 selected_char += 1
                             scroll_timer = 7
 
-                    if n_name_char > 0:
+                    if n_name_chars > 0:
                         scale = 1.0
-                        adjust_bar = 0
                         char_selected = chars[selected_char]
                         if char_selected == "$":
                             enter = True
                         elif char_selected == "[":
                             enter = False
                             adjust_bar = -2
-                            char_input = self.write(chars[selected_char], (name_input_Xpos + adjust_bar, name_pos[1] + 4), self.display, font="fontB", scale=scale)
+                            char_input = self.write(chars[selected_char], (char_cursor_Xpos + adjust_bar, name_pos[1] + 4), self.display, font="fontB", scale=scale)
                         else:
                             enter = False
-                            char_input = self.write(chars[selected_char], (name_input_Xpos + adjust_bar, name_pos[1] - 2), self.display, font="fontB", scale=scale)
+                            char_input = self.write(chars[selected_char], (char_cursor_Xpos, name_pos[1] - 2), self.display, font="fontB", scale=scale)
                     else:
                         enter = True
-                    if not name_input_Xpos:
-                        name_input_Xpos = name_pos[2] - 0.5 # Gets the first char pos
+                    if not char_cursor_Xpos:
+                        char_cursor_Xpos = name_pos[2] - 0.5 # Gets the first char pos
 
             mask = pygame.mask.from_surface(self.display)
             outline = mask.to_surface(setcolor=(0, 0, 0, 255), unsetcolor=(0, 0, 0, 0))
@@ -1415,28 +1455,9 @@ class Game:
                     if self.input_shoot < 4: #If is not mouse
                         if event.key == self.inputs["shoot"][self.input_shoot]:
                             if input_your_name and not keyboard_type and self.input_shoot > 0: # If the spacebar are not been used to shoot
-                                if n_name_char == 0 or enter == True:
-                                    self.sfx["select"].play()
-                                    self.player_name = final_name
-                                    pygame.time.delay(500)
-                                    self.game_over()
-                                else:
-                                    self.sfx["pick_up"].play()
-                                    new_name = ""
-                                    i = 0
-                                    for char in name:
-                                        if i == char_in_name:
-                                            if chars[selected_char] == "[":
-                                                new_name += " "
-                                            else:
-                                                new_name += chars[selected_char]
-                                        else:
-                                            new_name += char
-                                        i += 1
-                                    name = new_name
-                                    char_in_name += 1
-                                    name_input_Xpos += 8
-                                    n_name_char -= 1
+                                name, char_in_name, char_cursor_Xpos, n_name_chars = confirm_char(
+                                    name, char_in_name, char_cursor_Xpos, n_name_chars, enter, selected_char
+                                )
                             else:
                                 if not self.player.throw and not self.player.dead:
                                     self.player.attack()
@@ -1494,35 +1515,19 @@ class Game:
                                     scroll_timer = 20
                                     scroll[1] = True
                         if event.key == pygame.K_SPACE:
-                            if n_name_char == 0 or enter == True and not keyboard_type:
-                                self.sfx["select"].play()
-                                self.player_name = final_name
-                                pygame.time.delay(500)
-                                self.game_over()
+                            if keyboard_type:
+                                name, char_in_name, char_cursor_Xpos, n_name_chars = add_space_to_name(name, char_in_name, char_cursor_Xpos, n_name_chars)
                             else:
-                                self.sfx["pick_up"].play()
-                                new_name = ""
-                                i = 0
-                                for char in name:
-                                    if i == char_in_name:
-                                        if chars[selected_char] == "[" or keyboard_type:
-                                            new_name += " "
-                                        else:
-                                            new_name += chars[selected_char]
-                                    else:
-                                        new_name += char
-                                    i += 1
-                                name = new_name
-                                char_in_name += 1
-                                name_input_Xpos += 8
-                                n_name_char -= 1
+                                name, char_in_name, char_cursor_Xpos, n_name_chars = confirm_char(
+                                    name, char_in_name, char_cursor_Xpos, n_name_chars, enter, selected_char
+                                )
                         if event.key == pygame.K_BACKSPACE: #ERASER
                             if enter:
                                 enter = False
 
                             selected_char = len(chars) - 2 if keyboard_type else 0
 
-                            if n_name_char != 13:
+                            if n_name_chars != 13:
                                 char_in_name -= 1
                                 new_name = ""
                                 i = 0
@@ -1533,8 +1538,8 @@ class Game:
                                         new_name += char
                                     i += 1
                                 name = new_name
-                                name_input_Xpos -= 8
-                                n_name_char += 1
+                                char_cursor_Xpos -= 8
+                                n_name_chars += 1
                         if event.key == pygame.K_RETURN:
                             if not enter:
                                 selected_char = len(chars) - 1 # Should == "$"
@@ -1552,9 +1557,9 @@ class Game:
                             else:
                                 keyboard_type = False
                                 selected_char = 0 #"a"
-                        else:
+                        else: # For the keyboard type
                             letter = event.unicode
-                            if keyboard_type and n_name_char > 0 and not enter: # Keyboard support
+                            if keyboard_type and n_name_chars > 0 and not enter: # Keyboard support
                                 letter = letter.lower()
                                 if not letter:
                                     pass
@@ -1570,8 +1575,8 @@ class Game:
                                         i += 1
                                     name = new_name
                                     char_in_name += 1
-                                    name_input_Xpos += 8
-                                    n_name_char -= 1
+                                    char_cursor_Xpos += 8
+                                    n_name_chars -= 1
                 if event.type == pygame.KEYUP:
                     if event.key == self.inputs["move_left"][self.input_move]:
                         if input_your_name:
