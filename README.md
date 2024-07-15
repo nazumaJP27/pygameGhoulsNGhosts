@@ -46,7 +46,7 @@ To run the Pygame Ghouls 'N Ghosts project, follow these steps:
 
 ### Concept
 
-The inspiration for this game came from my desire to recreate and enhance an older Scratch project of mine called *Scratch Ghouls 'n Ghosts*, that was a simple game where players controlled a knight battling skeleton enemies to increase their final score. While that project featured music and a logo reminiscent of *Super Ghouls 'n Ghosts*, it did not go beyond those thematic elements.
+The inspiration for this game came from my desire to recreate and enhance an older Scratch project of mine called *Scratch Skulls 'n Ghosts*, which was a simple game where players controlled a knight battling skeleton enemies to increase their final score. While that project featured music and a logo reminiscent of *Super Ghouls 'n Ghosts*, it did not go beyond those thematic elements.
 
 With *Pygame Ghouls 'n Ghosts*, my aim is to more closely capture the look and feel of the original game and pay homage to this 90s classic. By utilizing assets from the source material, I strive to create a more nostalgic experience for players, while also  introducing new features and ideas to enhance gameplay and add replayability. 
 
