@@ -127,15 +127,15 @@ class PhysicsEntity:
 
 class Player(PhysicsEntity):
     def __init__(self, game, pos, size, weapon):
-        self.power_level = 0
-        self.power_upgrade = {0: 1.0, 1: 1.2, 2: 1.7, 3: 3.2}
-        self.power = self.power_upgrade[self.power_level]
+        self.damage_level = 0
+        self.damage_upgrade = {0: 1.0, 1: 1.2, 2: 1.7, 3: 3.2}
+        self.damage = self.damage_upgrade[self.damage_level]
 
         self.speed_level = 0
         self.speed_upgrade = {0: 1.2, 1: 1.5, 2: 1.8, 3: 2.2}
         self.speed = self.speed_upgrade[self.speed_level]
 
-        self.max_level = False # True if speed and power levels get 3
+        self.max_level = False # True if speed and damage levels get 3
         self.hp = 1
         self.dead = False
 
@@ -143,6 +143,8 @@ class Player(PhysicsEntity):
 
         self.pick_up = False
         self.item_taken = ""
+        self.pick_up_timer = 0
+        self.item_taken_write = ""
 
         self.weapon = weapon
         self.weapons_held = [weapon,]
@@ -184,10 +186,14 @@ class Player(PhysicsEntity):
         self.renderPos_x = -4
         self.renderPos_y = -5
 
-        if self.speed_level and self.power_level == 3:
+        if self.speed_level and self.damage_level == 3:
             self.max_level = True
 
         if self.pick_up:
+            self.pick_up_timer = 40
+            self.item_taken_write = self.item_taken.replace("_", " ")
+            if "hp" in self.item_taken_write:
+                self.item_taken_write = "armor"
             self.game.sfx["pick_up"].play()
             self.upgrade(self.item_taken)
             self.pick_up = False
@@ -200,6 +206,9 @@ class Player(PhysicsEntity):
         self.gravity()
         frame_size = self.animation.sprite().get_size()
         size = (15, 30)
+
+        if self.pick_up_timer > 0:
+            self.pick_up_timer -= 1
 
         # Remove entity when out of bounds
         if self.pos[0] > 610 or self.pos[0] < -10 or self.pos[1] > 330 or self.pos[1] < -60:
@@ -360,11 +369,11 @@ class Player(PhysicsEntity):
         print("Weapon equip:" + self.weapon)
         print("Weapon cooldown:" + str(self.throw_cooldown))
     
-    def power_up(self):
-        if self.power_level < 3:
-            self.power_level += 1
-            self.power = self.power_upgrade[self.power_level]
-            print(self.power_level)
+    def damage_up(self):
+        if self.damage_level < 3:
+            self.damage_level += 1
+            self.damage = self.damage_upgrade[self.damage_level]
+            print(self.damage_level)
 
     def speed_up(self):
         if self.speed_level < 3:
@@ -382,7 +391,7 @@ class Player(PhysicsEntity):
             "axe_drop": "axe",
             "sword_drop": "sword"}
         items = {
-            "power_up": self.power_up,
+            "damage_up": self.damage_up,
             "speed_up": self.speed_up,
             "hp_up": self.hp_up,
             }
@@ -391,8 +400,14 @@ class Player(PhysicsEntity):
             weapon = weapons[upgrade_item]
             if weapon not in self.weapons_held:
                 self.weapons_held.append(weapon)
+                self.item_taken_write = weapon
 
         elif upgrade_item in items:
+            self.item_taken_write = self.item_taken.replace("_", " ")
+            if "hp" in self.item_taken_write:
+                self.item_taken_write = "armor"
+            else:
+                self.item_taken_write = self.item_taken_write.replace("up", "upgrade")
             items[upgrade_item]()
 
     def rect(self):
@@ -432,7 +447,7 @@ class Enemy(PhysicsEntity):
         self.damaged = False
         self.die = False
         self.delete = False
-        self.activate_knockback = True # Adress a potencial bug with entities changing size while in knockback
+        self.activate_knockback = True  # Adress a potencial bug with entities changing size while in knockback
         self.knockback_taken = 0
         self.knock_back = 0
         self.hit_direction_right = False
@@ -825,12 +840,12 @@ class Ghost(Enemy):
 
 
 class Weapon:
-    def __init__(self, game, w_type, pos, flip, player_power):
+    def __init__(self, game, w_type, pos, flip, player_damage):
         self.game = game
         self.type = w_type
-        self.weapons_power = {"spear": [2.0, 25], "sword": [1.5, 15], "axe": [4.5, 30], "arrow": 1.0}
-        self.damage_power = self.weapons_power[w_type][0] * player_power
-        self.knockback_power = min(60, self.weapons_power[w_type][1] * player_power)
+        self.weapons_damage = {"spear": [2.0, 25], "sword": [1.5, 15], "axe": [4.5, 30], "arrow": 1.0}
+        self.damage_power = self.weapons_damage[w_type][0] * player_damage
+        self.knockback_damage = min(60, self.weapons_damage[w_type][1] * player_damage)
         self.pos = list(pos)
         self.pos_adjust = False
         self.size = (0, 0)
@@ -898,7 +913,7 @@ class Weapon:
                         self.hit = True
                         entity.hit_weapon = self.type
                         entity.damage_taken = round(self.damage_power, ndigits=3)
-                        entity.knockback_taken = self.knockback_power
+                        entity.knockback_taken = self.knockback_damage
                         self.Nhits += 1
                         self.hit_delay -= 1
                         
@@ -937,10 +952,10 @@ class Weapon:
 
 
 class Spear(Weapon):
-    def __init__(self, game, pos, flip, player_power):
+    def __init__(self, game, pos, flip, player_damage):
         self.index = 1
         self.damage_power = 2.0
-        super().__init__(game, "spear", pos, flip, player_power)
+        super().__init__(game, "spear", pos, flip, player_damage)
         self.game.sfx[self.type + "_throw"].play()
 
     def update(self, tiles=None, entities=None):
@@ -962,10 +977,10 @@ class Spear(Weapon):
 
 
 class Sword(Weapon):
-    def __init__(self, game, pos, flip, player_power):
+    def __init__(self, game, pos, flip, player_damage):
         self.index = 2
         self.damage_power = 1.5
-        super().__init__(game, "sword", pos, flip, player_power)
+        super().__init__(game, "sword", pos, flip, player_damage)
         self.game.sfx[self.type + "_throw"].play()
 
     def update(self, tiles=None, entities=None):
@@ -987,10 +1002,10 @@ class Sword(Weapon):
 
 
 class Axe(Weapon):
-    def __init__(self, game, pos, flip, player_power):
+    def __init__(self, game, pos, flip, player_damage):
         self.index = 3
         self.damage_power = 4.5
-        super().__init__(game, "axe", pos, flip, player_power)
+        super().__init__(game, "axe", pos, flip, player_damage)
         self.velocity[1] = -5
         self.game.sfx[self.type + "_throw"].play()
     
@@ -1018,10 +1033,10 @@ class Axe(Weapon):
 
 
 class Arrow(Weapon):
-    def __init__(self, game, pos, flip, player_power):
+    def __init__(self, game, pos, flip, player_damage):
         self.index = 4
         self.damage_power = 1.0 
-        super().__init__(game, "arrow", pos, flip, player_power)
+        super().__init__(game, "arrow", pos, flip, player_damage)
     
     def update(self, tiles=None, entities=None):
         super().update(tiles=tiles, entities=entities)
@@ -1085,9 +1100,9 @@ class Item:
 
         player_rect = player.rect()
         if item_rect.colliderect(player_rect) and player.dead == False and not self.delete:
-                player.item_taken = self.type
-                player.pick_up = True
-                self.pick_up = True
+            player.item_taken = self.type
+            player.pick_up = True
+            self.pick_up = True
         
         if self.pick_up:
             self.delete = True

@@ -156,7 +156,7 @@ class Game:
             "sword": Animation(load_images("weapons/sword")),
             "arrow": Animation(load_images("weapons/arrow")),
             "speed_up": load_image("misc/speed_up.png"),
-            "power_up": load_image("misc/power_up.png"),
+            "damage_up": load_image("misc/damage_up.png"),
             "hp_up": load_image("misc/hp_up.png"),
             "spear_drop": load_image("hud/weapons/spear.png", scale=1.2), 
             "sword_drop": load_image("hud/weapons/sword.png", scale=1.3),
@@ -165,7 +165,7 @@ class Game:
 
         self.hud = {
             "head": load_image("hud/player/head.png"),
-            "power": load_image("hud/player/power.png"),
+            "damage": load_image("hud/player/damage.png"),
             "speed": load_image("hud/player/speed.png"),
             "upgrade0": load_image("hud/player/upgrade/0.png"),
             "upgrade1": load_image("hud/player/upgrade/1.png"),
@@ -212,11 +212,11 @@ class Game:
 
         self.weapons_n_kills = {"spear": 0, "axe": 0, "sword": 0}
 
-        self.game_items = ["power_up", "hp_up", "speed_up"]
+        self.game_items = ["damage_up", "hp_up", "speed_up"]
         self.item_roll = 10
         self.hp_up_droped = False
         self.speed_up_droped = False
-        self.power_up_droped = False
+        self.damage_up_droped = False
 
         self.player = Player(self, (150, 250), (15, 30), random.choice(self.game_weapons))
         self.player_speed = 1.5 * self.player.speed
@@ -362,7 +362,7 @@ class Game:
         self.seconds = 0
         self.minutes = 0
 
-        self.game_items = ["power_up", "hp_up", "speed_up"]
+        self.game_items = ["damage_up", "hp_up", "speed_up"]
         self.game_weapons = ["spear", "axe", "sword"]
         self.weapon_roll = 20 # Variable to keep track of the times which weapon tries to drop
         self.weapon_droped = False
@@ -372,7 +372,7 @@ class Game:
         self.item_roll = 15
         self.hp_up_droped = False
         self.speed_up_droped = False
-        self.power_up_droped = False
+        self.damage_up_droped = False
 
         self.player = Player(self, (285, 250), (15, 30), random.choice(self.game_weapons))
         self.movement = [False, False] #K_LEFT, K_RIGHT
@@ -399,13 +399,13 @@ class Game:
         frame_rect = self.hud["frame"].get_rect(center=current_weapon_pos)
         surf.blit(self.hud["frame"], frame_rect)
 
-        # Render players power and speed level
+        # Render players damage and speed level
         self.write("player", (27, 15), self.display, center=True)
 
-        power_rect = self.hud["power"].get_rect(center=(27, 31))
-        surf.blit(self.hud["power"], power_rect)
-        power_level_rect = self.hud["upgrade3"].get_rect(center=(60, 31))
-        surf.blit(self.hud["upgrade" + str(self.player.power_level)], power_level_rect)
+        damage_rect = self.hud["damage"].get_rect(center=(27, 31))
+        surf.blit(self.hud["damage"], damage_rect)
+        damage_level_rect = self.hud["upgrade3"].get_rect(center=(60, 31))
+        surf.blit(self.hud["upgrade" + str(self.player.damage_level)], damage_level_rect)
 
         speed_rect = self.hud["speed"].get_rect(center=(27, 61))
         surf.blit(self.hud["speed"], speed_rect)
@@ -456,7 +456,7 @@ class Game:
             return None
 
 
-    def upgrade_drop(self, enemy_pos): # PowerUp and SpeedUp
+    def upgrade_drop(self, enemy_pos): # DamageUp and SpeedUp
         if self.item_roll <= 0:
             random_drop = 1
         else:
@@ -482,8 +482,8 @@ class Game:
             self.game_items.append("hp_up")
 
         if not self.max_level:
-            player_levels = {"speed": [player.speed_level, "speed_up"], "power": [player.power_level, "power_up"]}
-            if player.speed_level > 2 or player.power_level > 2:
+            player_levels = {"speed": [player.speed_level, "speed_up"], "damage": [player.damage_level, "damage_up"]}
+            if player.speed_level > 2 or player.damage_level > 2:
                 for level in player_levels.values():
                     if level[1] in self.game_items and level[0] == 3: # If upgrade item ("###_up") in the list of items to drop
                         self.game_items.remove(level[1])
@@ -1193,8 +1193,8 @@ class Game:
             self.display0.blit(mountains_img, (130, 50))
             self.display0.blit(mountains_img, (-350, 50))
             self.display0.blit(castle_img, (0, 60))
-            self.display0.blit(back0, (0,20))
-            self.display0.blit(back1, (0,20))
+            self.display0.blit(back0, (0, 20))
+            self.display0.blit(back1, (0, 20))
             self.display0.blit(tiles_img, (0, 28))
             self.display0.blit(ground_img, (0, 28))
 
@@ -1248,6 +1248,21 @@ class Game:
             elif self.player.damaged == False and self.player.hit_cooldown != False:
                 self.player.update(((self.movement[1] - self.movement[0]) * self.player.speed, 0), tiles=platforms, boundaries=boundaries)
             elif not self.player.dead:
+                # Write in the display when the player gets an item
+                if self.player.pick_up_timer > 0:
+                    write_pos = [self.player.pos[0] + 5, self.player.pos[1] - 7]
+                    write_pick_up = self.player.item_taken_write.split()
+                    if len(write_pick_up) == 1:
+                        if write_pick_up == "axe":
+                            write_pos[0] += 8
+                        self.write(write_pick_up[0], write_pos, self.display, center=True, font="fontC")
+                    else:  # Write in two lines
+                        if "speed" in write_pick_up:
+                            font = "fontB"
+                        else:
+                            font = "fontD"
+                        self.write(write_pick_up[0], (write_pos[0], write_pos[1] - 12), self.display, center=True, font=font)
+                        self.write(write_pick_up[1], write_pos, self.display, center=True, font="fontC")
                 self.count_time()
                 self.player.update(((self.movement[1] - self.movement[0]) * self.player.speed, 0), tiles=platforms, boundaries=boundaries, entities=enemies)
 
@@ -1463,7 +1478,7 @@ class Game:
                                     self.player.attack()
                                     if self.player.throw:
                                         # Pick the class of the weapon that the player is currently helding
-                                        weapon = weapon_class[self.player.weapon](self, self.player.pos, self.player.flip, self.player.power)
+                                        weapon = weapon_class[self.player.weapon](self, self.player.pos, self.player.flip, self.player.damage)
                                         weapons.append(weapon)
                     if self.input_swap_weapon < 3: #If is not mouse
                         if event.key == self.inputs["swap_weapon"][self.input_swap_weapon]:
@@ -1615,7 +1630,7 @@ class Game:
                                 self.player.attack()
                                 if self.player.throw:
                                     # Pick the class of the weapon that the player is currently helding
-                                    weapon = weapon_class[self.player.weapon](self, self.player.pos, self.player.flip, self.player.power)
+                                    weapon = weapon_class[self.player.weapon](self, self.player.pos, self.player.flip, self.player.damage)
                                     weapons.append(weapon)
                         if event.button == pygame.BUTTON_RIGHT and self.input_swap_weapon == 3:
                             self.player.weapon_swap()
@@ -1639,6 +1654,7 @@ class Game:
             self.screen.blit(pygame.transform.scale(self.display0, self.screen.get_size()), (0, 0))
             pygame.display.update()
             self.clock.tick(60)
+
 
     def game_over(self):
         self.sfx["game_over"].play()
@@ -1737,11 +1753,11 @@ class Game:
             #enemies
             enemies_pos = self.write("enemies defeated:", (horde_pos[0], horde_pos[1] + 20), self.display, font="fontC", scale=1.0)
             self.write(self.enemies_defeated, (enemies_pos[3], enemies_pos[1]), self.display, font="fontA", scale=1.0)
-            #power
-            power_pos = self.write("power level:", (enemies_pos[0], enemies_pos[1] + 20), self.display, font="fontC", scale=1.0)
-            self.write(self.player.power_level, (power_pos[3], power_pos[1]), self.display, font="fontA", scale=1.0)
+            #damage
+            damage_pos = self.write("damage level:", (enemies_pos[0], enemies_pos[1] + 20), self.display, font="fontC", scale=1.0)
+            self.write(self.player.damage_level, (damage_pos[3], damage_pos[1]), self.display, font="fontA", scale=1.0)
             #speed
-            speed_pos = self.write("speed level:", (power_pos[0], power_pos[1] + 20), self.display, font="fontC", scale=1.0)
+            speed_pos = self.write("speed level:", (damage_pos[0], damage_pos[1] + 20), self.display, font="fontC", scale=1.0)
             self.write(self.player.speed_level, (speed_pos[3], speed_pos[1]), self.display, font="fontA", scale=1.0)
             #spear
             spear_pos = self.write("spear kills:", (speed_pos[0], speed_pos[1] + 20), self.display, font="fontC", scale=1.0)
