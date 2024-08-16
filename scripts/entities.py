@@ -190,14 +190,11 @@ class Player(PhysicsEntity):
             self.max_level = True
 
         if self.pick_up:
-            self.pick_up_timer = 40
-            self.item_taken_write = self.item_taken.replace("_", " ")
-            if "hp" in self.item_taken_write:
-                self.item_taken_write = "armor"
+            self.pick_up_timer = 50
             self.game.sfx["pick_up"].play()
             self.upgrade(self.item_taken)
             self.pick_up = False
-            self.item_taken = "" # Reset item taken
+            self.item_taken = ""  # Reset item taken
 
         if self.hp < 1 and not self.dead:
             self.game.sfx["arthur_death"].play()
@@ -1133,3 +1130,19 @@ class WeaponDrop(Item):
     
     def update(self, player, tiles=None):
         super().update(player, tiles=tiles)
+
+
+class FireTorch:
+    def __init__(self, game, pos, flip=False):
+        self.game = game
+        self.pos = list(pos)
+
+        # Set animations
+        self.flip = flip
+        self.fire = self.game.animations["fire_collum"].copy()
+    
+    def update(self):
+        self.fire.update()
+    
+    def render(self, surf):
+        surf.blit(pygame.transform.flip(self.fire.sprite(), self.flip, False), (self.pos[0], self.pos[1]))

@@ -4,7 +4,7 @@ import string
 import time
 import os
 import sys
-from scripts.entities import PhysicsEntity, Weapon, Player, Spear, Sword, Axe, Arrow, Enemy, Zombie, Maddog, MaddogS, Ghost, Item, WeaponDrop
+from scripts.entities import PhysicsEntity, Weapon, Player, Spear, Sword, Axe, Arrow, Enemy, Zombie, Maddog, MaddogS, Ghost, Item, WeaponDrop, FireTorch
 from scripts.utils import load_image, load_images, load_images_dict, show_hitbox, Animation
 
 
@@ -115,7 +115,7 @@ class Game:
             "enemies/maddog/death": Animation(load_images("enemies/zombie/death"), img_dur=5),
             "enemies/maddog/idle": Animation(load_images("enemies/maddog/idle"), img_dur= 30, loop=True),
             "enemies/zombie/walk": Animation(load_images("enemies/zombie/walk"), img_dur= 30, loop=True),
-            "enemies/zombie/death": Animation(load_images("enemies/zombie/death"), img_dur=5),
+            "enemies/zombie/death": Animation(load_images("enemies/zombie/death"), img_dur=4),
             "enemies/zombie/idle": Animation(load_images("enemies/zombie/idle"), img_dur=30),
             "enemies/zombie/spawn_coffin": Animation(load_images("enemies/zombie/spawn_coffin"), img_dur= 20),
             "enemies/zombie/spawn_ground": Animation(load_images("enemies/zombie/spawn_ground"), img_dur= 20),
@@ -148,6 +148,7 @@ class Game:
             "player/hit": Animation(load_images("player/hit"), img_dur=15),
             "player/death": Animation(load_images("player/death"), img_dur=15),
             "enemies/idle": Animation(load_images("enemies/idle")),
+            "fire_collum": Animation(load_images("misc/fire-collum", scale=0.7), img_dur=8, loop=True),
         }
 
         self.weaponsAndItems = {
@@ -160,7 +161,7 @@ class Game:
             "hp_up": load_image("misc/hp_up.png"),
             "spear_drop": load_image("hud/weapons/spear.png", scale=1.2), 
             "sword_drop": load_image("hud/weapons/sword.png", scale=1.3),
-            "axe_drop": load_image("hud/weapons/axe.png", scale=1.2)
+            "axe_drop": load_image("hud/weapons/axe.png", scale=1.2),
         }
 
         self.hud = {
@@ -1155,6 +1156,15 @@ class Game:
 
         enemies = []
         items = []
+
+        # Animated torch fires in the map
+        fires = [
+            FireTorch(self, (58, 244), flip=True),  # First collum 
+            FireTorch(self, (341, 146), flip=False),  # Collum above platform
+            FireTorch(self, (243, 232), flip=False),  # Platform left
+            FireTorch(self, (400, 232), flip=True),  # Platform right
+            FireTorch(self, (478, 228), flip=True),  # Last collum
+            ]
         
         show_hitbox_v = False
         weapon_class = {"spear": Spear, "sword": Sword, "axe": Axe, "arrow": Arrow}
@@ -1248,7 +1258,7 @@ class Game:
             elif self.player.damaged == False and self.player.hit_cooldown != False:
                 self.player.update(((self.movement[1] - self.movement[0]) * self.player.speed, 0), tiles=platforms, boundaries=boundaries)
             elif not self.player.dead:
-                # Write in the display when the player gets an item
+                # write() on the display when the player gets an item
                 if self.player.pick_up_timer > 0:
                     write_pos = [self.player.pos[0] + 5, self.player.pos[1] - 7]
                     write_pick_up = self.player.item_taken_write.split()
@@ -1324,6 +1334,11 @@ class Game:
 
             # Render entities
             self.player.render(self.display)
+
+            # Update fire animations
+            for fire in fires:
+                fire.render(self.display0)
+                fire.update()
 
             ### NAME PROMPT
             if name_prompt:

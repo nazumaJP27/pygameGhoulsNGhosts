@@ -10,10 +10,10 @@ def load_image(path, key=(0, 0, 0), scale=1.0):
     return img
 
 
-def load_images(path):
+def load_images(path, scale=1.0):
     images = []
     for img_name in sorted(os.listdir(BASE_IMG_PATH + path)):
-        images.append(load_image(path + "/" + img_name))
+        images.append(load_image(path + "/" + img_name, scale=scale))
     return images
 
 
