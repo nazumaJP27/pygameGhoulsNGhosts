@@ -580,9 +580,12 @@ class Game:
     def opening(self):
         nazumaLogo = load_image("opening/nazuma-nobg.png")
         nazumaLogo_size = list(nazumaLogo.get_size())
-        size_adjust = 2.4
+        size_adjust = 3.0
         nazumaLogo = pygame.transform.scale(nazumaLogo, (nazumaLogo_size[0] / size_adjust, nazumaLogo_size[1] / size_adjust))  # Adjust size if needed
         logo_rect = nazumaLogo.get_rect(center=(300, 150))
+
+        presents = load_image("opening/presents.png")
+        presents_rect = presents.get_rect(center=(300, 210))
 
         # Initial black screen
         self.display.fill((0, 0, 0))
@@ -591,7 +594,7 @@ class Game:
         pygame.time.delay(1500)  # Wait for 1.5 second
 
         # Function to fade in and out
-        def fade_in_and_out(image, rect):
+        def fade_in_and_out(image, image1, rect, rect1):
             capcom_length = round(self.sfx["capcom"].get_length() * 60)
             alpha = 0
             fade_in = True
@@ -633,6 +636,10 @@ class Game:
                 image.set_alpha(alpha)
                 self.display.blit(image, rect)
 
+                # Apply alpha to the presents
+                image1.set_alpha(alpha)
+                self.display.blit(image1, rect1)
+
                 # Drawing borders
                 display_borders = [
                     pygame.Rect(0, 1, 1, 318),  # left_border
@@ -650,7 +657,7 @@ class Game:
 
         # Start the sequence
         self.sfx["capcom"].play()
-        fade_in_and_out(nazumaLogo, logo_rect)
+        fade_in_and_out(nazumaLogo, presents, logo_rect, presents_rect)
 
         # Final black screen
         self.display.fill((0, 0, 0))
@@ -676,12 +683,16 @@ class Game:
 
 
     def main_menu(self):
-        logo_img = load_image("misc/logo-snake.png")
+        logo_img = load_image("misc/logo-snake.png", scale=1.3)
         logo_rect = logo_img.get_rect(center=(300, 100))
 
         game_start_img = load_image("misc/game start.png")
         game_start_pos = (300, 200)
         game_start_rect = game_start_img.get_rect(center=game_start_pos)
+
+        option_mode_img = load_image("misc/option mode.png")
+        option_mode_pos = (300, 220)
+        option_mode_rect = game_start_img.get_rect(center=option_mode_pos)
 
         select = 0
         selectSpearPosition = [(0, 0)] 
@@ -691,13 +702,12 @@ class Game:
         images = {
             "logo": [logo_img, logo_rect],
             "game_start": [game_start_img, game_start_rect],
+            "option_mode": [option_mode_img, option_mode_rect],
             "select_spear": [select_spear_img, select_spear_rect]
         }
 
         while True:
             self.display.fill((0, 0, 0))
-
-            controls_options_pos = self.write("control options", (300, game_start_pos[1] + 28), self.display, font="fontA", center=True)
 
             arws_ud_help = self.write("~/^", (28, 290), self.display, font="fontB", center=True)
             self.write("move cursor", (arws_ud_help[0] + 26, arws_ud_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
@@ -705,12 +715,14 @@ class Game:
             select_help = self.write("[/$", (28, 305), self.display, font="fontB", center=True)
             self.write("select", (select_help[0] + 26, select_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
-            github = self.write("github:", (233, 287), self.display, font="fontC", scale=1.0)
-            self.write("nazumajp27", (github[3], github[1]), self.display, font="fontC", scale=1.0)
+            credits = self.write("# nazuma 2024", (314, 260), self.display, center=True, font="fontA", scale=1.0)
+            self.write("fan project by j. paulo seibt", (305, credits[1] + 15), self.display, center=True, font="fontA", scale=1.0)
+            self.write("# nazuma brazil r.s. 2024", (207, credits[1] + 30), self.display, center=False, font="fontA", scale=1.0)
+            self.write("licenced by crescendo", (303, credits[1] + 45), self.display, center=True, font="fontA", scale=1.0)
 
             selectSpearPosition = [
                 (game_start_pos[0] - 63, game_start_pos[1] - 4),
-                (controls_options_pos[2] - 23, controls_options_pos[1] - 8),
+                (option_mode_pos[0] - 63, option_mode_pos[1] - 4),
                                 ]
 
             for event in pygame.event.get():
@@ -872,7 +884,7 @@ class Game:
             self.write("move cursor", (arws_ud_help[0] + 22, arws_ud_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
             arws_lr_help = self.write("</>", (28, controls_options_pos[1] + 285), self.display, font="fontB", center=True)
-            self.write("change key", (arws_lr_help[0] + 22, arws_lr_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
+            self.write("change action", (arws_lr_help[0] + 22, arws_lr_help[1] - 1), self.display, font="fontA", center=False, scale=0.8)
 
             if select != 5:
                 self.write("$", (485, controls_options_pos[1] + 285), self.display, font="fontB", center=True)
