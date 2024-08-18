@@ -1291,6 +1291,9 @@ class Game:
                 self.count_time()
                 self.player.update(((self.movement[1] - self.movement[0]) * self.player.speed, 0), tiles=platforms, boundaries=boundaries, entities=enemies)
 
+            # Render entities
+            self.player.render(self.display)
+
             # Create enemy horde:
             if len(enemies) < 1:
                 self.sfx["new_horde"].play()
@@ -1299,7 +1302,6 @@ class Game:
                 enemy_horde = self.create_horde(self.score, self.horde, self.player.pos)
                 for enemy in enemy_horde:
                     enemies.append(enemy)
-                
             # Update enemies
             elif enemies:
                 for enemy in enemies:
@@ -1348,9 +1350,6 @@ class Game:
                         elif item.type == "hp_up":
                             self.hp_up_droped = False
                         items.remove(item)
-
-            # Render entities
-            self.player.render(self.display)
 
             # Update fire animations
             for fire in fires:
