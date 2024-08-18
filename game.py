@@ -35,6 +35,8 @@ class Game:
         self.display0 = pygame.Surface((WIDTH_d, HEIGHT_d))
         self.display = pygame.Surface((WIDTH_d, HEIGHT_d), pygame.SRCALPHA)
 
+        self.screenshake = 0
+
         #Create a clock object to have controll over the speed witch the program runs
         self.clock = pygame.time.Clock() 
 
@@ -1218,7 +1220,7 @@ class Game:
                 pygame.Rect(87, 155, 17, 10), #tree
                 pygame.Rect(243, 195, 165, 10), #platform
                 pygame.Rect(334, 145, 23, 10), #collum above platform
-                pygame.Rect(469, 227, 23, 10), #right platform
+                pygame.Rect(469, 227, 23, 10), #right collum
                 pygame.Rect(561, 190, 10, 10), #skull spitter
                 #pygame.Rect(0, 300, 600, 10), #bottom floor
                 #pygame.Rect(200, 80, 200, 10), #upgrade platform
@@ -1254,6 +1256,7 @@ class Game:
                 self.player.update((0, 0), tiles=boundaries)
                 name_prompt = True
             elif self.player.damaged == True:
+                self.screenshake = max(20, self.screenshake)
                 self.player.update((0, 0), tiles=platforms, boundaries=boundaries)
             elif self.player.damaged == False and self.player.hit_cooldown != False:
                 self.player.update(((self.movement[1] - self.movement[0]) * self.player.speed, 0), tiles=platforms, boundaries=boundaries)
@@ -1289,6 +1292,8 @@ class Game:
             elif enemies:
                 for enemy in enemies:
                     if enemy.damage_timer > 0:
+                        if not self.screenshake:
+                            self.screenshake = min(15, enemy.damage_taken_write * 1.5)
                         damage_number, after_dot = str(enemy.damage_taken_write).split(".")
                         self.write(damage_number + after_dot[0], (enemy.pos[0], enemy.pos[1] - 5), self.display, font="fontD")
                 for enemy in enemies:
@@ -1666,7 +1671,10 @@ class Game:
 
             self.display0.blit(self.display, (0, 0))
 
-            self.screen.blit(pygame.transform.scale(self.display0, self.screen.get_size()), (0, 0))
+            self.screenshake = max(0, self.screenshake - 7)
+
+            screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
+            self.screen.blit(pygame.transform.scale(self.display0, self.screen.get_size()), screenshake_offset)
             pygame.display.update()
             self.clock.tick(60)
 
