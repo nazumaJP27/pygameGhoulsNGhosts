@@ -185,7 +185,7 @@ class Game:
 
         #### Variables
         self.high_scores = []
-        with open("leaderboard.csv") as file:
+        with open("csvs/leaderboard.csv") as file:
             for line in file:
                 name, score = line.rstrip().split(",")
                 self.high_scores.append([name, int(score)])
@@ -195,7 +195,7 @@ class Game:
         self.all_time_scores = True
         self.all_scores = []
         if self.all_time_scores:
-            with open("all_scores.csv") as file:
+            with open("csvs/all_scores.csv") as file:
                 for line in file:
                     name, score = line.rstrip().split(",")
                     self.all_scores.append([name, int(score)])
@@ -233,7 +233,7 @@ class Game:
         self.input_shoot = 0
         self.input_crouch = 0
         self.input_swap_weapon = 0
-        with open("controls.csv") as file:
+        with open("csvs/controls.csv") as file:
             for line in file:
                 action, input = line.rstrip().split(",")
                 if action == "move_input":
@@ -972,7 +972,7 @@ class Game:
                         else:
                             select += 1
                     if event.key == pygame.K_RETURN:
-                        with open("controls.csv", "w") as file:
+                        with open("csvs/controls.csv", "w") as file:
                             for input in inputs.keys():
                                 if input == "move_input":
                                     selected_input = move_input_select
@@ -1023,7 +1023,7 @@ class Game:
                                 swap_weapon_input_select += 1
                         # Game Start
                         elif select == 5:
-                            with open("controls.csv", "w") as file:
+                            with open("csvs/controls.csv", "w") as file:
                                 for input in inputs.keys():
                                     if input == "move_input":
                                         selected_input = move_input_select
@@ -1732,7 +1732,7 @@ class Game:
 
                 all_scores = new_all_scores # New list of scores
 
-                with open("all_scores.csv", "w") as file:
+                with open("csvs/all_scores.csv", "w") as file:
                     for score in all_scores:
                         file.write(f"{score[0]},{score[1]}\n")
                         ### All time scores end
@@ -1758,7 +1758,7 @@ class Game:
             self.high_scores = new_scores # New list of scores
             self.best_score = self.high_scores[0][1]
             self.last_score = self.high_scores[9][1]
-            with open("leaderboard.csv", "w") as file:
+            with open("csvs/leaderboard.csv", "w") as file:
                 for score in self.high_scores:
                     file.write(f"{score[0]},{score[1]}\n")
 
