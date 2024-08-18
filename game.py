@@ -1736,15 +1736,22 @@ class Game:
                     for score in all_scores:
                         file.write(f"{score[0]},{score[1]}\n")
                         ### All time scores end
+        
+        # Variables for new high score
+        run_score_in_leaderboard = None
+        run_score_flame = None
+        flame_pos_idx = None
 
         if self.score > self.tenth_score:
             run_score_in_leaderboard = False
             new_scores = []
+            run_score_flame = FireTorch(self, (0,0), flip=True)
             for score in self.high_scores:
                 if len(new_scores) < 10:
                     if self.score > score[1] and not run_score_in_leaderboard:
                         new_scores.append([self.player_name, self.score])
                         run_score_in_leaderboard = True
+                        flame_pos_idx = self.high_scores.index(score)
                     # Checks again if the leaderboard already have 10 scores
                     if len(new_scores) < 10:
                         new_scores.append(score)
@@ -1844,6 +1851,14 @@ class Game:
                     self.write("rd", (n_rank[3], rank_row_pos), self.display, font="fontD")
                 else:
                     self.write("th", (n_rank[3], rank_row_pos), self.display, font="fontC")
+                # FireTorch object next to new high score
+                if run_score_in_leaderboard and flame_pos_idx + 1 == rank:
+                    x = 20
+                    if rank == 10:
+                        x += 8
+                    run_score_flame.pos = (n_rank[3] - x, n_rank[1] - 20)
+                    run_score_flame.update()
+                    run_score_flame.render(self.display)
                 rank_row_pos += 20
 
             for index, score in enumerate(self.high_scores): #Index: 0, score: ["player name", player score]
