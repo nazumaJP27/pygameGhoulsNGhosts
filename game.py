@@ -436,7 +436,8 @@ class Game:
                     print("Weapon droped")
                     self.weapon_droped = True
                     return weapon_drop
-            if len(self.game_items) > 0 or len(self.game_weapons) == 0 or not weapon_drop:
+
+            if not self.weapon_droped and len(self.game_items) > 0:
                 upgrade_drop = self.upgrade_drop(enemy_pos)
                 if upgrade_drop:
                     print("upgrade droped")
@@ -478,11 +479,19 @@ class Game:
 
 
     def update_itemsToDrop(self, player, drops):
+        # Update the list of weapons that can be droped
+        if len(self.game_weapons) > 0:
+            for weapon in player.weapons_held:
+                if weapon in self.game_weapons:
+                    self.game_weapons.remove(weapon)
+
         # Update items that can be droped
-        if "hp_up" in self.game_items and player.hp > 1:
-            self.game_items.remove("hp_up")
-        elif "hp_up" not in self.game_items and player.hp < 2:
-            self.game_items.append("hp_up")
+        if self.hp_up_droped or player.hp > 1:
+            if "hp_up" in self.game_items:
+                self.game_items.remove("hp_up")
+        elif not self.hp_up_droped and player.hp < 2:
+            if "hp_up" not in self.game_items:
+                self.game_items.append("hp_up")
 
         if not self.max_level:
             player_levels = {"speed": [player.speed_level, "speed_up"], "damage": [player.damage_level, "damage_up"]}
@@ -492,24 +501,14 @@ class Game:
                         self.game_items.remove(level[1])
                         if self.player.max_level:
                             self.max_level = True
-            
             elif not drops:
-                if player.hp < 2 and "hp_up" not in self.game_items:
-                    self.game_items.append("hp_up")
                 for level in player_levels.values():
                     if level[1] not in self.game_items and level[0] < 3: # If upgrade item ("###_up") in the list of items to drop
                         self.game_items.append(level[1])
-
             elif drops:
                 for drop in drops:
                     if drop.type in self.game_items:
                         self.game_items.remove(drop.type)
-
-        # Update the list of weapons that can be droped
-        if len(self.game_weapons) > 0:
-            for weapon in player.weapons_held:
-                if weapon in self.game_weapons:
-                    self.game_weapons.remove(weapon)
 
 
     def create_horde(self, score, horde, player_pos):
