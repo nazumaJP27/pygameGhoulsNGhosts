@@ -1701,15 +1701,20 @@ class Game:
         game_start_pos = (300, 260)
         game_start_rect = game_start_img.get_rect(center=game_start_pos)
 
+        option_mode_img = load_image("misc/option mode.png")
+        option_mode_pos = (300, 280)
+        option_mode_rect = game_start_img.get_rect(center=option_mode_pos)
+
         select = 0
         adjust_pos = 9
-        selectSpearPosition = [(245, game_start_pos[1]), '''(245 + adjust_pos, controls_pos[1])'''] 
+        selectSpearPosition = [(245, game_start_pos[1]), (245, option_mode_pos[1]),]
         select_spear_img = load_image("misc/select spear.png")
         select_spear_rect = select_spear_img.get_rect(center=selectSpearPosition[select])
 
         images = {
             "game_over": [game_over_img, game_over_rect],
             "game_start": [game_start_img, game_start_rect],
+            "option_mode": [option_mode_img, option_mode_rect],
             "select_spear": [select_spear_img, select_spear_rect]
         }
 
@@ -1942,12 +1947,10 @@ class Game:
                 for border in display_borders:
                     pygame.draw.rect(self.display, (255, 255, 255), border)
 
-            controls_options_pos = self.write("control options", (300, game_start_pos[1] + 28), self.display, font="fontA", center=True)
-
             selectSpearPosition = [
                 (game_start_pos[0] - 63, game_start_pos[1] - 4),
-                (controls_options_pos[2] - 23, controls_options_pos[1] - 8),
-                                   ]
+                (option_mode_pos[0] - 63, option_mode_pos[1] - 4),
+                                  ]
 
             if select > 1:
                 select = 0
