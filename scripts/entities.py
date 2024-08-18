@@ -163,7 +163,7 @@ class Player(PhysicsEntity):
         self.throw_animation_cooldown = 13
         self.throw_cooldown = self.cooldown[weapon] # Cooldown of the current weapon
         self.tuck = False
-        self.tuck_dur = 15
+        self.tuck_dur = 8
         self.n_tucks = 1
 
         self.knock_back = 0
@@ -266,7 +266,7 @@ class Player(PhysicsEntity):
             self.set_action("tuck")
             self.tuck_dur -= 1
             if self.tuck_dur <= 0:
-                self.tuck_dur = 15
+                self.tuck_dur = 8
                 self.tuck = False
                 self.n_tucks -= 1
 
