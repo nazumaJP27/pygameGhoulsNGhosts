@@ -186,7 +186,7 @@ class Player(PhysicsEntity):
         self.renderPos_x = -4
         self.renderPos_y = -5
 
-        if self.speed_level and self.damage_level == 3:
+        if self.speed_level == 3 and self.damage_level == 3:
             self.max_level = True
 
         if self.pick_up:

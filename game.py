@@ -217,9 +217,8 @@ class Game:
 
         self.game_items = ["damage_up", "hp_up", "speed_up"]
         self.item_roll = 10
+        self.upgrade_droped = False
         self.hp_up_droped = False
-        self.speed_up_droped = False
-        self.damage_up_droped = False
 
         self.player = Player(self, (150, 250), (15, 30), random.choice(self.game_weapons))
         self.player_speed = 1.5 * self.player.speed
@@ -373,13 +372,13 @@ class Game:
         self.weapons_n_kills = {"spear": 0, "axe": 0, "sword": 0}
 
         self.item_roll = 15
+        self.upgrade_droped = False
         self.hp_up_droped = False
-        self.speed_up_droped = False
-        self.damage_up_droped = False
 
         self.player = Player(self, (285, 250), (15, 30), random.choice(self.game_weapons))
         self.movement = [False, False] #K_LEFT, K_RIGHT
         self.player_name = "arthur"
+        self.max_level = False
 
 
     def render_hud(self, surf):
@@ -425,7 +424,7 @@ class Game:
 
 
     def item_drop(self, enemy_pos):
-        if not self.weapon_droped: # Handle weapon drops
+        if not self.weapon_droped and not self.upgrade_droped:  # Handle weapon drops
             if len(self.game_weapons) > 0:
                 weapon_drop = None
                 if self.score > 50 and len(self.game_weapons) == 2:
@@ -437,11 +436,15 @@ class Game:
                     self.weapon_droped = True
                     return weapon_drop
 
-            if not self.weapon_droped and len(self.game_items) > 0:
+            if not self.weapon_droped and len(self.game_items) > 0:  # Handle upgrade drops
                 upgrade_drop = self.upgrade_drop(enemy_pos)
                 if upgrade_drop:
+                    self.upgrade_droped = True
+                    if upgrade_drop.type == "hp_up":
+                        self.hp_up_droped = True
                     print("upgrade droped")
                 return upgrade_drop
+        return None
 
 
     def weapon_drop(self, enemy_pos):
@@ -499,8 +502,8 @@ class Game:
                 for level in player_levels.values():
                     if level[1] in self.game_items and level[0] == 3: # If upgrade item ("###_up") in the list of items to drop
                         self.game_items.remove(level[1])
-                        if self.player.max_level:
-                            self.max_level = True
+                    if self.player.max_level:
+                        self.max_level = True
             elif not drops:
                 for level in player_levels.values():
                     if level[1] not in self.game_items and level[0] < 3: # If upgrade item ("###_up") in the list of items to drop
@@ -1325,8 +1328,9 @@ class Game:
                         print(f"Score: {self.score}")
                         if self.player.hp < 2 or not self.player.max_level:
                             item = self.item_drop(enemy.pos) # Handle weapons and upgrade drops
-                        if item:
-                            items.append(item)
+                            if item:
+                                items.append(item)
+                                item = None
                         enemies.remove(enemy)
                     elif enemy.delete == True:
                         enemies.remove(enemy)
@@ -1346,9 +1350,12 @@ class Game:
                     if item.delete == True:
                         if item.__class__ == WeaponDrop:
                             self.weapon_droped = False
-                        elif item.type == "hp_up":
-                            self.hp_up_droped = False
+                        elif item.__class__ == Item:
+                            self.upgrade_droped = False
+                            if item.type == "hp_up":
+                                self.hp_up_droped = False
                         items.remove(item)
+                        item = None
 
             # Update fire animations
             for fire in fires:
