@@ -1,4 +1,6 @@
-# Pygame Ghouls 'n Ghosts
+# Pygame Ghouls 'N Ghosts
+#### Itch.io page (Download for Windows): https://nazuma.itch.io/pygame-ghouls-n-ghosts
+#### Video Demo (Version 1.0): https://www.youtube.com/watch?v=FDvuSFBUjeU
 #### Video Demo (CS50P Final Project): https://youtu.be/1SQpq-fdN_I
 #### Description: An arcade-style game inspired by the classic Super Ghouls 'n Ghosts. It features simple rogue-like elements and character progression, encouraging players to replay and compete for the highest score.
 
@@ -12,6 +14,8 @@ Throughout the game, players can collect **items** to increase Arthur’s *damag
 
 
 ## Installation
+
+##### *An executable file can be downloaded in https://nazuma.itch.io/pygame-ghouls-n-ghosts.*
 
 To run the Pygame Ghouls 'N Ghosts project, follow these steps:
 
