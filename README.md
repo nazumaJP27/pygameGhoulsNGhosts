@@ -1,16 +1,23 @@
+<<<<<<< HEAD
 # Pygame Ghouls 'N Ghosts
 #### Itch.io page (Download for Windows): https://nazuma.itch.io/pygame-ghouls-n-ghosts
 #### Video Demo (Version 1.0): https://www.youtube.com/watch?v=FDvuSFBUjeU
 #### Video Demo (CS50P Final Project): https://youtu.be/1SQpq-fdN_I
+=======
+# Pygame Ghouls 'n Ghosts
+#### Video Demo (Version 1.0): https://youtu.be/FDvuSFBUjeU?si=H67V5go3e8i5PbDR
+#### Video for CS50P Final Project (old version): https://youtu.be/1SQpq-fdN_I
+>>>>>>> d02532250abdb5461fef6747cf2b626022eed03f
 #### Description: An arcade-style game inspired by the classic Super Ghouls 'n Ghosts. It features simple rogue-like elements and character progression, encouraging players to replay and compete for the highest score.
 
+🙋‍♂️ I'm currently finalizing a build to upload into Itch.io. **Any kind of feedback is greatly appreciated!** Thank you, everyone.
 
 ## Overview
 This project is a game created with the Pygame library, inspired by Capcom's Ghosts ‘n Goblins series, particularly based on **Super Ghouls ‘n Ghosts** released in 1991 for the Super Nintendo Entertainment System (SNES). Most assets, such as sprites, art, tiles, and sounds, were obtained from rips and screenshots of the original game found on the internet.
 
-***Pygame Ghouls ‘n Ghosts*** is an arcade-style game where the player controls Arthur, who needs to survive hordes of enemy monsters and defeat as many as possible of them to achieve the highest score possible before he inevitably succumbs to the odds.
+***Pygame Ghouls ‘n Ghosts*** is an arcade-style game where the player controls Arthur, who needs to survive hordes of enemy monsters and defeat as many of them as possible to achieve the highest score possible before he inevitably succumbs to the odds.
 
-Throughout the game, players can collect **items** to increase Arthur’s *damage, speed, hit points*, and discover other *weapons* to help overcome the challenge of staying alive. The game also features a **leaderboard** system that stores the top ten highest scores and the names of the players who achieved them.
+Throughout the game, players can collect **items** to increase Arthur’s *damage, speed, hit points*, and discover other *weapons* to help overcome the challenge of staying alive. The game also features a **leaderboard** system that stores the top ten highest scores and the players' names who achieved them.
 
 
 ## Installation
@@ -52,7 +59,7 @@ To run the Pygame Ghouls 'N Ghosts project, follow these steps:
 
 The inspiration for this game came from my desire to recreate and enhance an older Scratch project of mine called *Scratch Skulls 'n Ghosts*, which was a simple game where players controlled a knight battling skeleton enemies to increase their final score. While that project featured music and a logo reminiscent of *Super Ghouls 'n Ghosts*, it did not go beyond those thematic elements.
 
-With *Pygame Ghouls 'n Ghosts*, my aim is to more closely capture the look and feel of the original game and pay homage to this 90s classic. By utilizing assets from the source material, I strive to create a more nostalgic experience for players, while also  introducing new features and ideas to enhance gameplay and add replayability. 
+With *Pygame Ghouls 'n Ghosts*, I aim to more closely capture the look and feel of the original game and pay homage to this 90s classic. By utilizing assets from the source material, I strive to create a more nostalgic experience for players, while also  introducing new features and ideas to enhance gameplay and add replayability. 
 
 ### Features and Changes:
 
@@ -100,16 +107,16 @@ The initialization phase sets up the game environment, loads necessary assets, a
 
 - **Control Initialization:** The control inputs are defined in a dictionary (`self.inputs`), mapping actions to their corresponding key bindings.
 
-The initialization sets the foundation for the game, ensuring all necessary assets, variables and settings are in place before transitioning to the game's different screens and main loop.
+The initialization sets the foundation for the game, ensuring all necessary assets, variables, and settings are in place before transitioning to the game's different screens and main loop.
 
 ### Opening
 
-The `opening` method attempts to resemble the booting sequence from *Super Ghouls 'n Ghosts* for the *SNES*, swapping Capcom's logo with CS50's. This sequence consists of a fade-in and fade-out effect for the logo, accompanied by the original game's sound effect, followed by a transition to the main menu.
+The `opening` method attempts to resemble the booting sequence from *Super Ghouls 'n Ghosts* for the *SNES*, swapping Capcom's logo with Nazuma's. This sequence consists of a fade-in and fade-out effect for the logo, accompanied by the original game's sound effect, followed by a transition to the main menu.
 
 
 ### Main Menu 
 
-The `main_menu` method provides the player with options to start the game, view control settings, and see credits. It features a visual interface with selectable options and navigation using keyboard inputs.
+The `main_menu` method provides the player with options to start the game and view control settings. It features a visual interface with selectable options, navigation using keyboard inputs, and some credits resembling the menu screen of Super Ghouls 'n Ghosts.
 
 - **Menu Layout:** Images for the logo, **`game start`** button, and **`control options`** are loaded and positioned on the screen. A selection cursor (*small spear*) is displayed next to the currently selected option.
 
@@ -285,8 +292,8 @@ Throughout the game loop, several custom functions are called at specific points
  #### Drop Chance Calculation: 
   - Uses `self.item_roll` to determine the probability.
   - If `self.item_roll` reaches 0, an item is guaranteed to drop.
-  - Otherwise, a random number from -5 to 1 is chosen to decide the drop and `self.item_roll` is decremented by 1.
-  - If the random number chosen is greater than 0, a item is dropped.
+  - Otherwise, a random number from -5 to 1 is chosen to decide the drop, and `self.item_roll` is decremented by 1.
+  - If the random number chosen is greater than 0, an item is dropped.
 
  #### Item Drop Execution:
   - Resets `self.item_roll` and plays the item drop sound effect if an item is dropped.
@@ -301,7 +308,7 @@ Throughout the game loop, several custom functions are called at specific points
   - Ensures items are added back to the list if conditions change (e.g., player loses health).
 
  #### Upgrade Item Logic:
-  - Adds or removes speed and power upgrades from the drop list based on the player's upgrade levels and if a item already dropped.
+  - Adds or removes speed and power upgrades from the drop list based on the player's upgrade levels and if an item already dropped.
 
  #### Weapon Drop Logic:
   - Updates the list of droppable weapons based on the weapons the player already holds.
@@ -338,7 +345,7 @@ Throughout the game loop, several custom functions are called at specific points
   - `left`: Boolean flag to left-align the text. Default is `False`.
   - `symbol`: Boolean flag indicating if the input is a symbol. Default is `False`.
   - `scale`: Scaling factor for the text or symbols. Default is `1.0`.
-  - `compansate`: Boolean flag to adjust spacing for different character widths. Default is `True`.
+  - `compensate`: Boolean flag to adjust spacing for different character widths. Default is `True`.
 
  #### Functionality:
   1. **Initialize Variables**:
@@ -346,10 +353,10 @@ Throughout the game loop, several custom functions are called at specific points
      - Initializes a dictionary `symbols_dict` to map special characters to their corresponding symbols.
 
   2. **Centering Logic**:
-     - If centering is enabled, adjusts the starting x-position based on the length of the string and the width of the first character.
+     - If centering is enabled, it adjusts the starting x-position based on the length of the string and the width of the first character.
 
   3. **Left Alignment Logic**:
-     - If left alignment is enabled, adjusts the starting x-position based on the length of the string.
+     - If left alignment is enabled, it adjusts the starting x-position based on the length of the string.
 
   4. **Symbol Handling**:
      - If the input is a symbol, it directly scales and renders the symbol.
@@ -642,7 +649,7 @@ Description of the classes imported from the `entities.py` file.
 
   - `set_weapon(self, weapon)`: Sets the weapon sprite based on the weapon type.
 
-  - `show_hitbox(self, surf, color=(0, 0, 200))`:Draws the weapon's hitbox on the given surface for debugging purposes.
+  - `show_hitbox(self, surf, color=(0, 0, 200))`: Draws the weapon's hitbox on the given surface for debugging purposes.
 
   - `gravity(self, x=0.1)`: Applies gravity to the weapon by increasing its vertical velocity.
 
@@ -664,7 +671,7 @@ Description of the classes imported from the `entities.py` file.
    - `__init__`:
      - Plays a specific sound effect for throwing a spear upon initialization.
    - `update`:
-     - The amount of horizontal velocity aplied for the spear is **`4`**.
+     - The amount of horizontal velocity applied for the spear is **`4`**.
      - Sets horizontal velocity based on the `flip` attribute to move the spear in the correct direction.
      - Adjusts the position of the spear when it hits an enemy or obstacle, providing specific visual feedback. 
 
