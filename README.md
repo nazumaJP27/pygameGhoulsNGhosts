@@ -5,7 +5,17 @@
 
 #### Description: An arcade-style game inspired by the classic Super Ghouls 'n Ghosts. It features simple rogue-like elements and character progression, encouraging players to replay and compete for the highest score.
 
-🙋‍♂️ I'm currently finalizing a build to upload into Itch.io. **Any kind of feedback is greatly appreciated!** Thank you, everyone.
+## Disclaimer
+
+This is a non-profit, fan-made project created for educational and personal purposes. It uses assets, including sprites, art, sound effects, and music, from Capcom's Super Ghouls 'n Ghosts (1991). **All rights to the original game, its assets, and intellectual property belong to Capcom**.
+
+**This project is not affiliated with or endorsed by Capcom**. It is intended to be a learning project to demonstrate my passion for game development and to pay homage to the classic game.
+
+#### No Commercial Use:
+
+**This project is for non-commercial use only**. No profits are being made from this project, and it is not intended to harm or dilute the original brand or intellectual property.
+
+***Credits/Original game: Super Ghouls 'n Ghosts (1991) by Capcom***
 
 ## Overview
 This project is a game created with the Pygame library, inspired by Capcom's Ghosts ‘n Goblins series, particularly based on **Super Ghouls ‘n Ghosts** released in 1991 for the Super Nintendo Entertainment System (SNES). Most assets, such as sprites, art, tiles, and sounds, were obtained from rips and screenshots of the original game found on the internet.
@@ -17,7 +27,7 @@ Throughout the game, players can collect **items** to increase Arthur’s *damag
 
 ## Installation
 
-#### 🕹 *If you just want to play the game, download the executable file on https://nazuma.itch.io/pygame-ghouls-n-ghosts.* 👻
+#### 🕹 *If you just want to play the game, download the executable file at https://nazuma.itch.io/pygame-ghouls-n-ghosts.* 👻
 
 To run the Pygame Ghouls 'N Ghosts project, follow these steps:
 
